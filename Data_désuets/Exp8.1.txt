@@ -1,0 +1,16 @@
+Traitement	Réplica	J4
+C	C1	100
+C	C2	90
+C	C3	70
+C	C4	100
+C	C5	100
+B	B1	60
+B	B2	70
+B	B3	80
+B	B4	70
+B	B5	80
+R	R1	60
+R	R2	70
+R	R3	70
+R	R4	70
+R	R5	60
