@@ -20,7 +20,7 @@ head(initial_number)
 mass_data <- full_data %>% 
   select(c(5:21)) %>% 
   merge(initial_mass, by = "Rep") %>% 
-  pivot_longer(cols = c(4:17,19), values_to = "Mass", names_to = "Time") %>% 
+  pivot_longer(cols = c(4:17,19), values_to = "Mass", names_to = "Time")
 head(mass_data)
 
 number_data <- full_data %>% 
@@ -40,7 +40,8 @@ head(surv_data)
 mean_data <- mass_data %>% 
   merge(number_data, by = c("Rep", "Bloc", "Trt", "Strain", "Time")) %>% 
   mutate(Mean = Mass/Number) 
-#write_csv(mean_data,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Exp1Csv/mean_data.csv")
+write_csv(mean_data,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_1_csv/mean_Experiment_1.csv")
+write_csv(mean_data,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_1_csv/mean_Experiment_1.csv")
 
 biom_data <- mean_data %>% 
   merge(surv_data, by = c("Rep", "Bloc", "Trt", "Strain", "Time")) %>% 
@@ -50,13 +51,10 @@ biom_data <- mean_data %>%
   mutate(Trt = as.factor(Trt)) %>% 
   mutate(Bloc = as.factor(Bloc)) %>% 
   mutate(Rep = as.factor(Rep))
-#write_csv(biom_data,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Exp1Csv/biom_data.csv")
+write_csv(biom_data,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_1_csv/biom_Experiment_1.csv")
+write_csv(biom_data,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_1_csv/biom_Experiment_1.csv")
 
-max_biom <- biom_data %>% 
-  mutate(Maximum = select(max(Biomass), by = Rep))
-  
-max(biom_data$Biomass)
-  
+
 mort_data <- surv_data %>% 
   mutate(Mortality = (10-Survival)*10) %>% 
   mutate(Time = as.numeric(Time)) %>% 
@@ -64,7 +62,8 @@ mort_data <- surv_data %>%
   mutate(Trt = as.factor(Trt)) %>% 
   mutate(Bloc = as.factor(Bloc)) %>% 
   mutate(Rep = as.factor(Rep)) 
-#write_csv(mort_data,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Exp1Csv/mort_data.csv")
+write_csv(mort_data,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_1_csv/mort_Experiment_1.csv")
+write_csv(mort_data,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_1_csv/mort_Experiment_1.csv")
 
 growth_data_1 <- mean_data %>% 
   select(-Mass,-Number) %>% 
@@ -98,20 +97,8 @@ growth_data <- growth_data_2 %>%
   mutate(Trt = as.factor(Trt)) %>% 
   mutate(Bloc = as.factor(Bloc)) %>% 
   mutate(Rep = as.factor(Rep))
-#write_csv(growth_data,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Exp1Csv/growth_data.csv")
-
-growth_data %>% 
-  tidyplot(x = initial_mean, y = final_growth, colour= Strain) %>% 
-  add_data_points() %>% 
-  split_plot(by = Trt, widths = 100, heights= 100)
-  
-#Modvérif1 <- lmer(final_mean ~ initial_mean*Strain*Trt + (1|Bloc) + (1|Bloc:Trt) + (1|Bloc:Strain), data = growth_data)
-#plot(Modvérif1)
-#qqnorm(residuals(Modvérif1)) 
-#qqline(residuals(Modvérif1), col = "red")
-
-#anova
-
+write_csv(growth_data,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_1_csv/growth_Experiment_1.csv")
+write_csv(growth_data,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_1_csv/growth_Experiment_1.csv")
 
 growth_rate_data <- growth_data_1 %>% 
   mutate("0" = (growth_data_1$'0' - growth_data_1$'0' )) %>% 
@@ -135,5 +122,7 @@ growth_rate_data <- growth_data_1 %>%
   mutate(Trt = as.factor(Trt)) %>% 
   mutate(Bloc = as.factor(Bloc)) %>% 
   mutate(Rep = as.factor(Rep))
-#write_csv(growth_rate_data,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Exp1Csv/growth_rate_data.csv")
+write_csv(growth_rate_data,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_1_csv/growth_rate_Experiment_1.csv")
+write_csv(growth_rate_data,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_1_csv/growth_rate_Experiment_1.csv")
 
+#Graphs
