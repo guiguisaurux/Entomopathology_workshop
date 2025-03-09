@@ -38,12 +38,12 @@ Mort_C <- Mort %>%
 
 write.csv(Mort_C,"Mort_C.csv")
 
-ModM <- glmer(Mort_Acc ~ Strain*Trt*Wound + Time + Strain:Time + Trt:Time + Wound:Time + (1|Bloc) + (1|Bloc:Strain) + (1|Bloc:Trt) + (1|Bloc:Wound) + (1|Identity), data = Mort_C, family = poisson)
-plot(ModM)
-qqnorm(residuals(ModM))
-qqline(residuals(ModM), col = "red")
-hist(Mort_C$Mort_Acc)
-car::Anova(ModM, type = 3)
+#ModM <- glmer(Mort_Acc ~ Strain*Trt*Wound + Time + Strain:Time + Trt:Time + Wound:Time + (1|Bloc) + (1|Bloc:Strain) + (1|Bloc:Trt) + (1|Bloc:Wound) + (1|Identity), data = Mort_C, family = poisson)
+#plot(ModM)
+#qqnorm(residuals(ModM))
+#qqline(residuals(ModM), col = "red")
+#hist(Mort_C$Mort_Acc)
+#car::Anova(ModM, type = 3)
 
 Mort_C %>%
   tidyplot(x = Time, y = Mort_Acc, color = Trt, dodge_width = 0) %>%

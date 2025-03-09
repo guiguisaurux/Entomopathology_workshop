@@ -38,7 +38,10 @@ Mort_C <- Mort %>%
   mutate(Time = as.numeric(Time)) %>% 
   mutate(Times = as.factor(Time))
 
-write_csv(Mort_C,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_mortalité.csv")
+write_csv(Mort_C,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_mortalité.csv") #MSI
+write_csv(Mort_C,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_mortalité.csv") #DELL
+
+
 
 #Création et manipulation des données de masses et de moyennes -> M = Mass; N = Number
 New.M <- New %>% 
@@ -71,7 +74,8 @@ New.T <- New.M %>%
   merge(Surv_long, by = c('Identity', 'Bloc', 'Trt', 'Wound', 'Strain', 'Day')) %>% 
   mutate(True_Mass = Mean * Survival)
 
-write_csv(New.T,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Masse_Transformée.csv")
+write_csv(New.T,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Masse_Transformée.csv") #MSI
+write_csv(New.T,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Masse_Transformée.csv") #DELL
 
 #Création tableau de croissances moyennes
 Growth_C <- New.F %>% 
@@ -88,9 +92,10 @@ Growth_C <- New.F %>%
   mutate(Time = as.numeric(Time)) %>% 
   mutate(Times = as.factor(Time))
 
-write_csv(Growth_C,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Moyenne.csv")
+write_csv(Growth_C,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Moyenne.csv") #MSI
+write_csv(Growth_C,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Moyenne.csv") #DELL
 
-#Création tableau de la croissance accumulée
+#Création tableau de la croissance cumulée
 Growth_M <- New.F %>% 
   mutate("2" = (New.F$'2' - New.F$Initial_Mean)) %>%
   mutate("4" = (New.F$'4' - New.F$Initial_Mean)) %>%
@@ -105,5 +110,8 @@ Growth_M <- New.F %>%
   mutate(Time = as.numeric(Time)) %>% 
   mutate(Times = as.factor(Time)) 
 
-write_csv(Growth_M,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Accummulée.csv")
+write_csv(Growth_M,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Cumulée.csv") #MSI
+write_csv(Growth_M,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Cumulée.csv") #DELL
 
+
+#Gestion des graphs
