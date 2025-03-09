@@ -34,7 +34,9 @@ Mort_C <- Mort %>%
   mutate(group = paste(Mort$Strain, Mort$Wound)) %>% 
   pivot_longer(cols = (6:14), names_to = 'Time', values_to = 'Mort_Acc') %>%
   mutate(Time = as.numeric(Time)) %>% 
-  mutate(Times = as.factor(Time)) 
+  mutate(Times = as.factor(Time))
+
+write.csv(Mort_C,"Mort_C.csv")
 
 ModM <- glmer(Mort_Acc ~ Strain*Trt*Wound + Time + Strain:Time + Trt:Time + Wound:Time + (1|Bloc) + (1|Bloc:Strain) + (1|Bloc:Trt) + (1|Bloc:Wound) + (1|Identity), data = Mort_C, family = poisson)
 plot(ModM)
@@ -57,8 +59,6 @@ New.M <- New %>%
 
 New.M$Day <- as.numeric(New.M$Day)
 
-Plot.M <- New.M %>% 
-  tidyplot(Mass, Day, color = Strain)
 
 
 New.N <- New %>% 
@@ -70,20 +70,20 @@ New.F <- New.M %>%
   mutate(Mean = Mass/Number) %>% 
   select(c(1:7,9,11)) %>% 
   pivot_wider(names_from = "Day", values_from = "Mean") %>% 
-  mutate(Initial_Mean = Initial_Mass/Initial_Number) %>% 
-  merge(New.T, by = "Identity") %>% 
-  mutate(Removed_Mean = Max_Mean - Initial_Mean) 
+  mutate(Initial_Mean = Initial_Mass/Initial_Number)
   
 
+Surv_long <- Mort %>% 
+  pivot_longer(cols = c(6:14), names_to = "Day", values_to = "Survival")
+
+  
 New.T <- New.M %>% 
   merge(New.N, by = c('Identity', 'Bloc', 'Trt', 'Wound', 'Strain', 'Day')) %>% 
-  mutate(Mean = Mass/Number)
-  
-New.T %>% 
-  tidyplot(x = Mean) %>% 
-  add_histogram() %>% 
-  split_plot(by = Day)
+  mutate(Mean = Mass/Number) %>% 
+  merge(Surv_long, by = c('Identity', 'Bloc', 'Trt', 'Wound', 'Strain', 'Day')) %>% 
+  mutate(True_Mass = Mean * Survival)
 
+write_csv(New.T,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/csv_expérience_MoTrWo/Transformed_Mass.csv")
 
 
 Growth_C <- New.F %>% 
@@ -99,6 +99,8 @@ Growth_C <- New.F %>%
   pivot_longer(cols = (8:15), names_to = 'Time', values_to = 'Growth_Rate') %>%
   mutate(Time = as.numeric(Time)) %>% 
   mutate(Times = as.factor(Time))
+
+write.csv(Growth_C, "Growth_C.csv")
 
 ModGr <- lmer(Growth_Rate ~ Strain*Trt*Wound + Time + Strain:Time + Trt:Time + Wound:Time + (1|Bloc) + (1|Bloc:Strain) + (1|Bloc:Trt) + (1|Bloc:Wound) + (1|Identity), data = Growth_C)
 plot(ModGr)
@@ -127,6 +129,8 @@ Growth_M <- New.F %>%
   pivot_longer(cols = (8:15), names_to = 'Time', values_to = 'Growth_Acc') %>%
   mutate(Time = as.numeric(Time)) %>% 
   mutate(Times = as.factor(Time)) 
+
+write.csv(Growth_M, "Growth_M.csv")
   
 
 ModG <- lmer(Growth_Acc ~ Strain*Trt*Wound + Time + Strain:Time + Trt:Time + Wound:Time + (1|Bloc) + (1|Bloc:Strain) + (1|Bloc:Trt) + (1|Bloc:Wound) + (1|Identity), data = Growth_M)
@@ -168,7 +172,7 @@ Biom <- Mort %>%
   merge(Growth_M, by = c('Identity', 'Bloc', 'Trt', 'Wound', 'Strain', 'Time')) %>% 
   mutate(Biom_Acc = Growth_Acc*Survival)
 
-  
+write.csv(Biom, "Biom.csv")
 
 Biom %>%
   tidyplot(x = Times, y = Biom_Acc, color = Wound, dodge_width = 0) %>%
