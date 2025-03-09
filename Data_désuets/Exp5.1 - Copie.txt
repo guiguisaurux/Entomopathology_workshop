@@ -1,0 +1,5 @@
+	Mort	Vivant
+CC	6	4
+CT	4	6
+BC	4	6
+BT	1	9
