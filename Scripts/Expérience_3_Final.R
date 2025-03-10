@@ -125,7 +125,6 @@ Mort_C_graph <- Mort_C %>%
   Wound == "Non" ~ "Control"
 ))
 
-
 library(tidyplots)
 
 Mort_C_graph %>% 
@@ -133,12 +132,12 @@ Mort_C_graph %>%
   add_line(linewidth = 0.8,alpha = 0.8, dodge_width = ) %>% 
   adjust_colors(c("#013928","darkred","sienna")) %>% 
   add_annotation_line(x = 7, xend = 18, y = 16, yend = 16) %>% 
-  add_annotation_line(x = 7, xend = 7, y = 15, yend = 16) %>% 
-  add_annotation_line(x = 18, xend = 18, y = 15, yend = 16) %>% 
+  add_annotation_line(x = 7, xend = 7, y = 15.5, yend = 16) %>% 
+  add_annotation_line(x = 18, xend = 18, y = 15.5, yend = 16) %>% 
   add_annotation_text("***", x = 12.535, y = 16.2, fontsize = 14) %>%
   adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
   adjust_y_axis(padding = c(0,0), limits = c(0,16.8), title = "Mortality (%)") %>% 
-  adjust_size(width = 150, height = 75) %>% 
+  adjust_size(width = 200, height = 100) %>% 
   save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Exp3.png")
 
 
