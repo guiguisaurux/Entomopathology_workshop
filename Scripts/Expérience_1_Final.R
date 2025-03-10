@@ -147,12 +147,110 @@ mort_data_sum <- mort_data %>%
     Trt == "B" ~ "Septic"
   ))
 
+mort_data_final_1 <- mort_data %>% 
+  mutate(Strain = case_when(
+    Strain == "All" ~ "Germany", 
+    Strain == "Esp" ~ "Spain",
+    Strain == "Fra" ~ "France",
+    Strain == "Gre" ~ "Greece",
+    Strain == "Inv1" ~ "Norway 1",
+    Strain == "Inv2" ~ "Norway 2",
+    Strain == "Ita1" ~ "Italy 1",
+    Strain == "Ita2" ~ "Italy 2",
+    Strain == "Tur" ~ "Turkey",
+    Strain == "Wor" ~ "Canada",
+    T ~ Strain)) %>% 
+  mutate(Wound = case_when(
+    Trt == "C" ~ "Sterile",
+    Trt == "B" ~ "Septic"
+  )) %>% 
+  select(-Survival) %>% 
+  pivot_wider(names_from = "Time", values_from = "Mortality")
+
+mort_data_final <- mort_data_final_1 %>% 
+  mutate(final_mort = mort_data_final_1$'14') %>% 
+  select(-'1',-'2',-'3',-'4',-'5',-'6',-'7',-'8',-'9',-'10',-'11',-'12',-'13',-'14',-'0')
+
+source("group_by_summary_stats.R")
+Stats_mort <- group_by_summary_stats(mort_data_final, final_mort, Strain, Wound)
+Stats_mean <- Stats_mort %>% 
+  select(Mean, Strain, Wound) %>% 
+  ungroup() %>% 
+  mutate(Mortality = as.numeric(Mean)) %>% 
+  mutate(Wound = as.factor(Wound)) %>% 
+  mutate(Strain = as.factor(Strain))
+
+Vector_Mean <- Stats_mean %>% 
+  filter(Wound == "Septic") %>% 
+  select(-Strain, -Wound, -Mortality)
+
+
+
 mort_data_sum %>% 
   tidyplot(x = Time, y = Mortality, color = Strain) %>% 
-  add_line(linewidth = 0.8, alpha = 0.8) %>% 
+  add_line(linewidth = 0.8, alpha = 0.75) %>% 
   adjust_colors(colors_discrete_okabeito) %>% 
   adjust_y_axis(limits = c(0,35), title = "Mortality (%)") %>%
   adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
   split_plot(by = Wound, widths = 150, heights = 75, ncol = 1) %>% 
   save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Exp1.png")
 
+Vector_plot <- Vector_Mean$Mean +1
+Vector_plot1 <- Vector_Mean$Mean + 0.5
+Vector_plot2 <- Vector_Mean$Mean + 1.5
+Vector_P_value <- c('*','n.s.','*','**','***','***','**','**','*','*')
+
+Mort_final <- mort_data_final %>% 
+  tidyplot(x = Strain, y = final_mort, color = Wound) %>% 
+  add_mean_bar(alpha = 0.5) %>% 
+  add_mean_dash(linewidth = 0.6) %>% 
+  adjust_colors(c("#012456","#096")) %>% 
+  adjust_size(width = 200, height = 100) %>% 
+  add_annotation_line(x = 0.8, xend = 1.2, y = Vector_plot[1], yend = Vector_plot[1]) %>% 
+  add_annotation_line(x = 1.8, xend = 2.2, y = Vector_plot[2], yend = Vector_plot[2]) %>%
+  add_annotation_line(x = 2.8, xend = 3.2, y = Vector_plot[3], yend = Vector_plot[3]) %>%
+  add_annotation_line(x = 3.8, xend = 4.2, y = Vector_plot[4], yend = Vector_plot[4]) %>%
+  add_annotation_line(x = 4.8, xend = 5.2, y = Vector_plot[5], yend = Vector_plot[5]) %>%
+  add_annotation_line(x = 5.8, xend = 6.2, y = Vector_plot[6], yend = Vector_plot[6]) %>%
+  add_annotation_line(x = 6.8, xend = 7.2, y = Vector_plot[7], yend = Vector_plot[7]) %>%
+  add_annotation_line(x = 7.8, xend = 8.2, y = Vector_plot[8], yend = Vector_plot[8]) %>%
+  add_annotation_line(x = 8.8, xend = 9.2, y = Vector_plot[9], yend = Vector_plot[9]) %>%
+  add_annotation_line(x = 9.8, xend = 10.2, y = Vector_plot[10], yend = Vector_plot[10]) %>% 
+  add_annotation_line(x = 0.8, xend = 0.8, y = Vector_plot1[1], yend = Vector_plot[1]) %>% 
+  add_annotation_line(x = 1.8, xend = 1.8, y = Vector_plot1[2], yend = Vector_plot[2]) %>% 
+  add_annotation_line(x = 2.8, xend = 2.8, y = Vector_plot1[3], yend = Vector_plot[3]) %>% 
+  add_annotation_line(x = 3.8, xend = 3.8, y = Vector_plot1[4], yend = Vector_plot[4]) %>% 
+  add_annotation_line(x = 4.8, xend = 4.8, y = Vector_plot1[5], yend = Vector_plot[5]) %>% 
+  add_annotation_line(x = 5.8, xend = 5.8, y = Vector_plot1[6], yend = Vector_plot[6]) %>% 
+  add_annotation_line(x = 6.8, xend = 6.8, y = Vector_plot1[7], yend = Vector_plot[7]) %>% 
+  add_annotation_line(x = 7.8, xend = 7.8, y = Vector_plot1[8], yend = Vector_plot[8]) %>% 
+  add_annotation_line(x = 8.8, xend = 8.8, y = Vector_plot1[9], yend = Vector_plot[9]) %>% 
+  add_annotation_line(x = 9.8, xend = 9.8, y = Vector_plot1[10], yend = Vector_plot[10]) %>%  
+  add_annotation_line(x = 1.2, xend = 1.2, y = Vector_plot1[1], yend = Vector_plot[1]) %>% 
+  add_annotation_line(x = 2.2, xend = 2.2, y = Vector_plot1[2], yend = Vector_plot[2]) %>% 
+  add_annotation_line(x = 3.2, xend = 3.2, y = Vector_plot1[3], yend = Vector_plot[3]) %>% 
+  add_annotation_line(x = 4.2, xend = 4.2, y = Vector_plot1[4], yend = Vector_plot[4]) %>% 
+  add_annotation_line(x = 5.2, xend = 5.2, y = Vector_plot1[5], yend = Vector_plot[5]) %>% 
+  add_annotation_line(x = 6.2, xend = 6.2, y = Vector_plot1[6], yend = Vector_plot[6]) %>% 
+  add_annotation_line(x = 7.2, xend = 7.2, y = Vector_plot1[7], yend = Vector_plot[7]) %>% 
+  add_annotation_line(x = 8.2, xend = 8.2, y = Vector_plot1[8], yend = Vector_plot[8]) %>% 
+  add_annotation_line(x = 9.2, xend = 9.2, y = Vector_plot1[9], yend = Vector_plot[9]) %>% 
+  add_annotation_line(x = 10.2, xend = 10.2, y = Vector_plot1[10], yend = Vector_plot[10]) %>% 
+  add_annotation_text(x = 1.02, y = Vector_plot2[1], text = Vector_P_value[1], fontsize = 10) %>%
+  add_annotation_text(x = 2.03, y = 10, text = Vector_P_value[2], fontsize = 8) %>%
+  add_annotation_text(x = 3.02, y = Vector_plot2[3], text = Vector_P_value[3], fontsize = 10) %>%
+  add_annotation_text(x = 4.02, y = Vector_plot2[4], text = Vector_P_value[4], fontsize = 10) %>%
+  add_annotation_text(x = 5.02, y = Vector_plot2[5], text = Vector_P_value[5], fontsize = 10) %>%
+  add_annotation_text(x = 6.02, y = Vector_plot2[6], text = Vector_P_value[6], fontsize = 10) %>%
+  add_annotation_text(x = 7.02, y = Vector_plot2[7], text = Vector_P_value[7], fontsize = 10) %>%
+  add_annotation_text(x = 8.02, y = Vector_plot2[8], text = Vector_P_value[8], fontsize = 10) %>%
+  add_annotation_text(x = 9.02, y = Vector_plot2[9], text = Vector_P_value[9], fontsize = 10) %>%
+  add_annotation_text(x = 10.02, y = Vector_plot2[10],text = Vector_P_value[10], fontsize = 10) %>% 
+  adjust_y_axis(title = "Mortality (%)") %>% 
+  adjust_x_axis(title = "Mealworm Strains") %>% 
+  save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Final_Mortality_Exp1.png")
+  
+  
+  
+  
+Mort_final
