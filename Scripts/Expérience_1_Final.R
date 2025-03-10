@@ -126,3 +126,33 @@ write_csv(growth_rate_data,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_w
 write_csv(growth_rate_data,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_1_csv/growth_rate_Experiment_1.csv")
 
 #Graphs
+library(tidyplots)
+mort_data_sum <- mort_data %>% 
+  group_by(Strain, Time, Trt) %>% 
+  summarize(Mortality = mean(Mortality)) %>% 
+  mutate(Strain = case_when(
+    Strain == "All" ~ "Germany", 
+    Strain == "Esp" ~ "Spain",
+    Strain == "Fra" ~ "France",
+    Strain == "Gre" ~ "Greece",
+    Strain == "Inv1" ~ "Norway 1",
+    Strain == "Inv2" ~ "Norway 2",
+    Strain == "Ita1" ~ "Italy 1",
+    Strain == "Ita2" ~ "Italy 2",
+    Strain == "Tur" ~ "Turkey",
+    Strain == "Wor" ~ "Canada",
+    T ~ Strain)) %>% 
+  mutate(Wound = case_when(
+    Trt == "C" ~ "Sterile",
+    Trt == "B" ~ "Septic"
+  ))
+
+mort_data_sum %>% 
+  tidyplot(x = Time, y = Mortality, color = Strain) %>% 
+  add_line(linewidth = 0.8, alpha = 0.8) %>% 
+  adjust_colors(colors_discrete_okabeito) %>% 
+  adjust_y_axis(limits = c(0,35), title = "Mortality (%)") %>%
+  adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
+  split_plot(by = Wound, widths = 150, heights = 75, ncol = 1) %>% 
+  save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Exp1.png")
+

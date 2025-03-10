@@ -118,7 +118,13 @@ write_csv(Growth_M,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/D
 Mort_C_graph <- Mort_C %>% 
   mutate(Mortality = Mort_Acc * 10) %>% 
   group_by(Wound, Time) %>% 
-  summarise(Mortality = mean(Mortality)) 
+  summarise(Mortality = mean(Mortality)) %>% 
+  mutate(Wound = case_when(
+  Wound == "Ste" ~ "Sterile",
+  Wound == "Ser" ~ "Septic",
+  Wound == "Non" ~ "Control"
+))
+
 
 library(tidyplots)
 
@@ -128,13 +134,18 @@ Mort_C_graph %>%
   adjust_colors(c("#013928","darkred","sienna")) %>% 
   add_annotation_line(x = 7, xend = 18, y = 16, yend = 16) %>% 
   add_annotation_line(x = 7, xend = 7, y = 15, yend = 16) %>% 
-  add_annotation_line(x = 18, xend = 18, y = 15, yend = 16) %>%
-  add_annotation_line(x = 12.5, xend = 12.5, y = 16, yend = 16.5) %>% 
-  add_annotation_text("***", x = 12.535, y = 16.8, fontsize = 14) %>% 
+  add_annotation_line(x = 18, xend = 18, y = 15, yend = 16) %>% 
+  add_annotation_text("***", x = 12.535, y = 16.2, fontsize = 14) %>%
+  adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
+  adjust_y_axis(padding = c(0,0), limits = c(0,16.8), title = "Mortality (%)") %>% 
   adjust_size(width = 150, height = 75) %>% 
   save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Exp3.png")
 
 
-  
 
-  
+
+
+
+
+
+
