@@ -195,6 +195,19 @@ mort_data_sum %>%
   split_plot(by = Wound, widths = 150, heights = 75, ncol = 1) %>% 
   save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Exp1.png")
 
+source("group_by_summary_stats.R")
+Stats_mort <- group_by_summary_stats(mort_data_final, final_mort, Strain, Wound)
+Stats_mean <- Stats_mort %>% 
+  select(Mean, Strain, Wound) %>% 
+  ungroup() %>% 
+  mutate(Mortality = as.numeric(Mean)) %>% 
+  mutate(Wound = as.factor(Wound)) %>% 
+  mutate(Strain = as.factor(Strain))
+
+Vector_Mean <- Stats_mean %>% 
+  filter(Wound == "Septic") %>% 
+  select(-Strain, -Wound, -Mortality)
+
 Vector_plot <- Vector_Mean$Mean +1
 Vector_plot1 <- Vector_Mean$Mean + 0.5
 Vector_plot2 <- Vector_Mean$Mean + 1.5
