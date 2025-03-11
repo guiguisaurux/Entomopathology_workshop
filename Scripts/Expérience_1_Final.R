@@ -126,6 +126,8 @@ write_csv(growth_rate_data,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_w
 write_csv(growth_rate_data,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_1_csv/growth_rate_Experiment_1.csv")
 
 #Graphs
+
+#Évolution de la mortalité ####
 library(tidyplots)
 mort_data_sum <- mort_data %>% 
   group_by(Strain, Time, Trt) %>% 
@@ -146,6 +148,18 @@ mort_data_sum <- mort_data %>%
     Trt == "C" ~ "Sterile",
     Trt == "B" ~ "Septic"
   ))
+
+
+mort_data_sum %>% 
+  tidyplot(x = Time, y = Mortality, color = Strain) %>% 
+  add_line(linewidth = 0.8, alpha = 0.75) %>% 
+  adjust_colors(colors_discrete_okabeito) %>% 
+  adjust_y_axis(limits = c(0,35), title = "Mortality (%)") %>%
+  adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
+  split_plot(by = Wound, widths = 150, heights = 75, ncol = 1) %>% 
+  save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Exp1.png")
+
+#Mortalité Finale#####
 
 mort_data_final_1 <- mort_data %>% 
   mutate(Strain = case_when(
@@ -170,30 +184,6 @@ mort_data_final_1 <- mort_data %>%
 mort_data_final <- mort_data_final_1 %>% 
   mutate(final_mort = mort_data_final_1$'14') %>% 
   select(-'1',-'2',-'3',-'4',-'5',-'6',-'7',-'8',-'9',-'10',-'11',-'12',-'13',-'14',-'0')
-
-source("group_by_summary_stats.R")
-Stats_mort <- group_by_summary_stats(mort_data_final, final_mort, Strain, Wound)
-Stats_mean <- Stats_mort %>% 
-  select(Mean, Strain, Wound) %>% 
-  ungroup() %>% 
-  mutate(Mortality = as.numeric(Mean)) %>% 
-  mutate(Wound = as.factor(Wound)) %>% 
-  mutate(Strain = as.factor(Strain))
-
-Vector_Mean <- Stats_mean %>% 
-  filter(Wound == "Septic") %>% 
-  select(-Strain, -Wound, -Mortality)
-
-
-
-mort_data_sum %>% 
-  tidyplot(x = Time, y = Mortality, color = Strain) %>% 
-  add_line(linewidth = 0.8, alpha = 0.75) %>% 
-  adjust_colors(colors_discrete_okabeito) %>% 
-  adjust_y_axis(limits = c(0,35), title = "Mortality (%)") %>%
-  adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
-  split_plot(by = Wound, widths = 150, heights = 75, ncol = 1) %>% 
-  save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Exp1.png")
 
 source("group_by_summary_stats.R")
 Stats_mort <- group_by_summary_stats(mort_data_final, final_mort, Strain, Wound)
@@ -263,7 +253,145 @@ Mort_final <- mort_data_final %>%
   adjust_x_axis(title = "Mealworm Strains") %>% 
   save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Final_Mortality_Exp1.png")
   
-  
-  
-  
 Mort_final
+
+#Évolution de la croissance#####
+growth_data_sum_strain <- growth_data %>% 
+  group_by(Strain, Time) %>% 
+  summarize(Growth = mean(Growth)) %>% 
+  mutate(Strain = case_when(
+    Strain == "All" ~ "Germany", 
+    Strain == "Esp" ~ "Spain",
+    Strain == "Fra" ~ "France",
+    Strain == "Gre" ~ "Greece",
+    Strain == "Inv1" ~ "Norway 1",
+    Strain == "Inv2" ~ "Norway 2",
+    Strain == "Ita1" ~ "Italy 1",
+    Strain == "Ita2" ~ "Italy 2",
+    Strain == "Tur" ~ "Turkey",
+    Strain == "Wor" ~ "Canada",
+    T ~ Strain)) 
+
+
+growth_data_sum_strain %>% 
+  tidyplot(x = Time, y = Growth, color = Strain) %>% 
+  add_line(linewidth = 0.8, alpha = 0.75) %>% 
+  adjust_colors(colors_discrete_okabeito) %>% 
+  adjust_y_axis(padding = c(0,0), title = "Mean accumulated biomass (µg/larvae)") %>%
+  adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
+  adjust_size(width = 200, height = 100) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Growth_by_Strain_Exp1.png")
+
+
+growth_data_sum_Wound<- growth_data %>% 
+  group_by(Trt, Time) %>% 
+  summarize(Growth = mean(Growth)) %>% 
+  mutate(Wound = case_when(
+    Trt == "C" ~ "Sterile",
+    Trt == "B" ~ "Septic"
+  ))
+
+
+growth_data_sum_Wound %>% 
+  tidyplot(x = Time, y = Growth, color = Wound) %>% 
+  add_line(linewidth = 0.8, alpha = 0.75) %>% 
+  adjust_colors(c("#012456","#096")) %>% 
+  adjust_y_axis(padding = c(0,0),title = "Mean accumulated biomass (µg/larvae)") %>%
+  adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
+  adjust_size(width = 200, height = 100) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Growth_by_Wound_Exp1.png")
+
+#Évolution de la moyenne####
+Mean_data_sum_strain <- mean_data %>% 
+  group_by(Strain, Time) %>% 
+  mutate(Time = as.numeric(Time)) %>% 
+  summarize(Mean = mean(Mean)) %>% 
+  mutate(Strain = case_when(
+    Strain == "All" ~ "Germany", 
+    Strain == "Esp" ~ "Spain",
+    Strain == "Fra" ~ "France",
+    Strain == "Gre" ~ "Greece",
+    Strain == "Inv1" ~ "Norway 1",
+    Strain == "Inv2" ~ "Norway 2",
+    Strain == "Ita1" ~ "Italy 1",
+    Strain == "Ita2" ~ "Italy 2",
+    Strain == "Tur" ~ "Turkey",
+    Strain == "Wor" ~ "Canada",
+    T ~ Strain)) 
+
+
+Mean_data_sum_strain %>% 
+  tidyplot(x = Time, y = Mean, color = Strain) %>% 
+  add_line(linewidth = 0.8, alpha = 0.75) %>% 
+  adjust_colors(colors_discrete_okabeito) %>% 
+  adjust_y_axis(title = "Mean biomass (µg/larvae)") %>%
+  adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
+  adjust_size(width = 200, height = 100) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Mean_by_Strain_Exp1.png")
+
+
+Mean_data_sum_Wound<- Mean_data %>% 
+  group_by(Trt, Time) %>% 
+  summarize(Mean = mean(Mean)) %>% 
+  mutate(Wound = case_when(
+    Trt == "C" ~ "Sterile",
+    Trt == "B" ~ "Septic"
+  ))
+
+
+Mean_data_sum_Wound %>% 
+  tidyplot(x = Time, y = Mean, color = Wound) %>% 
+  add_line(linewidth = 0.8, alpha = 0.75) %>% 
+  adjust_colors(c("#012456","#096")) %>% 
+  adjust_y_axis(title = "Mean biomass (µg/larvae)") %>%
+  adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
+  adjust_size(width = 200, height = 100) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Mean_by_Wound_Exp1.png")
+
+#Évolution de la Biomasse####
+biom_data_sum_strain <- biom_data %>% 
+  group_by(Strain, Time) %>% 
+  mutate(Time = as.numeric(Time)) %>% 
+  summarize(Biomass = mean(Biomass)) %>% 
+  mutate(Strain = case_when(
+    Strain == "All" ~ "Germany", 
+    Strain == "Esp" ~ "Spain",
+    Strain == "Fra" ~ "France",
+    Strain == "Gre" ~ "Greece",
+    Strain == "Inv1" ~ "Norway 1",
+    Strain == "Inv2" ~ "Norway 2",
+    Strain == "Ita1" ~ "Italy 1",
+    Strain == "Ita2" ~ "Italy 2",
+    Strain == "Tur" ~ "Turkey",
+    Strain == "Wor" ~ "Canada",
+    T ~ Strain)) 
+
+
+biom_data_sum_strain %>% 
+  tidyplot(x = Time, y = Biomass, color = Strain) %>% 
+  add_line(linewidth = 0.8, alpha = 0.75) %>% 
+  adjust_colors(colors_discrete_okabeito) %>% 
+  adjust_y_axis(title = "Total biomass (µg)") %>%
+  adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
+  adjust_size(width = 200, height = 100) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Strain_Exp1.png")
+
+
+biom_data_sum_Wound<- biom_data %>% 
+  group_by(Trt, Time) %>% 
+  mutate(Time = as.numeric(Time)) %>% 
+  summarize(Biomass = mean(Biomass)) %>% 
+  mutate(Wound = case_when(
+    Trt == "C" ~ "Sterile",
+    Trt == "B" ~ "Septic"
+  ))
+
+
+biom_data_sum_Wound %>% 
+  tidyplot(x = Time, y = Biomass, color = Wound) %>% 
+  add_line(linewidth = 0.8, alpha = 0.75) %>% 
+  adjust_colors(c("#012456","#096")) %>% 
+  adjust_y_axis(title = "Total biomass (µg)") %>%
+  adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
+  adjust_size(width = 200, height = 100) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Wound_Exp1.png")
