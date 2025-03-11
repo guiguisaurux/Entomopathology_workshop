@@ -7,7 +7,7 @@ library(tidyplots)
 #importation du tableau de donnée
 full_data <- read.table("Expérience1Souches.txt", header = T, check.names = F)
 
-#Séparation des données en tableau distincts
+#Séparation des données en tableau distincts####
 initial_mass <- full_data %>% 
   select(c(1:3))
 head(initial_mass)
@@ -125,7 +125,7 @@ growth_rate_data <- growth_data_1 %>%
 write_csv(growth_rate_data,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_1_csv/growth_rate_Experiment_1.csv")
 write_csv(growth_rate_data,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_1_csv/growth_rate_Experiment_1.csv")
 
-#Graphs
+#Graphs####
 
 #Évolution de la mortalité ####
 library(tidyplots)
