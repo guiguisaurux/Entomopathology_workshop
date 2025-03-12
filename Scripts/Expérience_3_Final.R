@@ -113,8 +113,32 @@ Growth_M <- New.F %>%
 write_csv(Growth_M,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Cumulée.csv") #MSI
 write_csv(Growth_M,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Cumulée.csv") #DELL
 
+#Biomasse totale:
+Biom_T <- New.F %>% 
+  mutate('0' = Initial_Mean)
+Biom_L <- Biom_T %>% 
+  pivot_longer(cols = c(8:15,17), names_to = "Time",values_to = "Mean")
 
-#Gestion des graphs
+Biom_L1 <- Biom_L %>% 
+  merge(Mort_C, by = c('Identity', 'Bloc', 'Trt', 'Wound', 'Strain', 'Time')) %>% 
+  mutate(Biomass = Mean*(10-Mort_Acc))
+write_csv(Biom_L1, "C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Biomasse.csv") 
+
+
+Max_Biom <- Biom_L1 %>% 
+  group_by(Bloc, Trt, Wound, Strain) %>% 
+  mutate(MaxBiom = max(Biomass)) %>% 
+  ungroup() %>% 
+  select(-Initial_Mass,-Initial_Number,-Initial_Mean,-Mort_Acc,-group,-Times,-Mean) %>% 
+  pivot_wider(names_from = "Time", values_from = "Biomass") %>% 
+  select(-c(7,8,10:15)) 
+
+Jour_14 <- Max_Biom %>% 
+  mutate(Jour14 = Max_Biom$'14') %>% 
+  mutate(Diff = MaxBiom - Max_Biom$'14')
+
+
+#Gestion des graphs####
 Mort_C_graph <- Mort_C %>% 
   mutate(Mortality = Mort_Acc * 10) %>% 
   group_by(Wound, Time) %>% 
@@ -141,10 +165,75 @@ Mort_C_graph %>%
   save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Exp3.png")
 
 
+#####PotentialGraphs#####
+Max_Biom %>% 
+  tidyplot(x = Strain, y = MaxBiom, colour = Trt) %>% 
+  add_mean_bar(alpha = 0.65) %>% 
+  add_mean_dash() %>% 
+  add_sd_errorbar() %>% 
+  adjust_y_axis(limits = c(4000,17000)) %>% 
+  split_plot(by = Wound, widths = 100, heights = 75)
+
+
+Jour_14 %>% 
+  tidyplot(x = Strain, y = Diff, colour = Trt) %>% 
+  add_boxplot() %>% 
+  adjust_y_axis() %>% 
+  add_data_points_jitter(jitter_height = 0) %>% 
+  split_plot(by = Wound, widths = 100, heights = 75)
+
+Jour_14 %>% 
+  tidyplot(x = Trt, y = Jour14, colour = Strain) %>% 
+  add_mean_bar(alpha = 0.65) %>% 
+  add_mean_dash() %>% 
+  
+  add_sd_errorbar() %>% 
+  adjust_y_axis(limits = c(4000,17000)) %>% 
+  split_plot(by = Wound, widths = 100, heights = 75)
+
+
+
+Max_Biom %>% 
+  tidyplot(x = Trt, y = MaxBiom, colour = Strain) %>% 
+  add_mean_bar(alpha = 0.65) %>% 
+  add_mean_dash() %>% 
+  add_sd_errorbar() %>% 
+  adjust_y_axis(limits = c(4000,17000)) %>% 
+  split_plot(by = Wound, widths = 100, heights = 75)
+
+Max_Biom %>% 
+  tidyplot(x = Wound, y = MaxBiom, colour = Wound) %>% 
+  add_mean_bar() %>% 
+  add_mean_dash()
 
 
 
 
+Real_max <- New.M %>% 
+  group_by(Identity) %>% 
+  mutate(RealMax = max(Mass)) %>% 
+  pivot_wider(names_from = "Day", values_from = "Mass") %>% 
+  ungroup()
+
+Real_max_with_14 <- Real_max %>% 
+  mutate(Mass14 = Real_max$'14') %>% 
+  select
+  
+  
+Real_max <- New.M %>% 
+  group_by(Identity) %>% 
+  mutate(RealMax = max(Mass)) %>% 
+  ungroup() %>% 
+  mutate(Diff = RealMax - Mass) %>% 
+  filter(Diff == 0) %>% 
+  mutate(Initial_Mass = Biom_T$'0')
 
 
 
+Real_max %>% 
+  mutate(Day = as.numeric(Day)) %>% 
+  tidyplot(x = Strain, y = Initial_Mass, colour = Trt) %>% 
+  add_mean_bar(alpha = 0.6) %>% 
+  #adjust_y_axis(limits = c(7,20)) %>% 
+  add_data_points_jitter() %>% 
+  split_plot(by = Wound, widths = 100, heights = 75)
