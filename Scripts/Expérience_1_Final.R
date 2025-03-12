@@ -151,13 +151,35 @@ mort_data_sum <- mort_data %>%
 
 
 mort_data_sum %>% 
+  filter(Wound == "Septic") %>% 
   tidyplot(x = Time, y = Mortality, color = Strain) %>% 
   add_line(linewidth = 0.8, alpha = 0.75) %>% 
   adjust_colors(colors_discrete_okabeito) %>% 
-  adjust_y_axis(limits = c(0,35), title = "Mortality (%)") %>%
-  adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
-  split_plot(by = Wound, widths = 150, heights = 75, ncol = 1) %>% 
-  save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Exp1.png")
+  adjust_y_axis(limits = c(0,40), title = "Cumulative mortality (%)") %>%
+  adjust_x_axis(padding = c(0,0), limits = c(0,14.1), title = "Time (Days)") %>% 
+  adjust_size(width = 200, height = 100) %>% 
+  add_annotation_line(x = 7.2, xend = 7.2, y = 34, yend = 35, color = "black") %>% 
+  add_annotation_line(x = 6.8, xend = 6.8, y = 34, yend = 35, color = "black") %>%
+  add_annotation_line(x = 6.8, xend = 7.2, y = 35, yend = 35, color = "black") %>% 
+  add_annotation_line(x = 9, xend = 9, y = 34, yend = 35, color = 'black') %>% 
+  add_annotation_line(x = 14, xend = 14, y =34, yend = 35, color = 'black') %>% 
+  add_annotation_line(x = 9, xend = 14, y = 35, yend = 35, color = 'black') %>% 
+  add_annotation_text(x = 7, y = 35.5, "*", fontsize = 12) %>% 
+  add_annotation_text(x = 11.5, y = 35.5, "***", fontsize = 12) %>% 
+  save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Septic_Exp1.png")
+
+mort_data_sum %>% 
+  filter(Wound == "Sterile") %>% 
+  tidyplot(x = Time, y = Mortality, color = Strain) %>% 
+  add_line(linewidth = 0.8, alpha = 0.75) %>% 
+  adjust_colors(colors_discrete_okabeito) %>% 
+  adjust_y_axis(limits = c(0,40), title = "Cumulative mortality (%)") %>%
+  adjust_x_axis(padding = c(0,0), limits = c(0,14.1), title = "Time (Days)") %>% 
+  adjust_size(width = 200, height = 100) %>% 
+  save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Sterile_Exp1.png")
+
+
+
 
 #Mortalité Finale#####
 
