@@ -29,7 +29,7 @@ Identity	Bloc	Trt	Wound	Strain	0	2	4	7	9	11	14	16	18
 1-Gre2ConNon-B2	B2	Con	Non	Gre	10	10	10	10	10	10	10	10	10
 2-Ita2ConNon-B2	B2	Con	Non	Ita	10	10	10	10	10	10	10	10	10
 3-Can2ConNon-B2	B2	Con	Non	Can	10	10	10	10	10	10	10	10	10
-4-Ita2LevNon-B2	B2	Lev	Non	Ita	10	10	10	10	10	10	9	9	10
+4-Ita2LevNon-B2	B2	Lev	Non	Ita	10	10	10	10	10	10	9	9	9
 5-Can2LevNon-B2	B2	Lev	Non	Can	10	10	10	10	10	10	10	10	10
 6-Gre2LevNon-B2	B2	Lev	Non	Gre	10	10	10	10	10	10	10	10	10
 7-Can2BacSte-B2	B2	Bac	Ste	Can	10	10	9	9	9	9	9	9	9
