@@ -97,6 +97,7 @@ write_csv(Growth_C,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/D
 
 #Création tableau de la croissance cumulée
 Growth_M <- New.F %>% 
+  mutate("0" = (New.F$Initial_Mean - New.F$Initial_Mean)) %>%
   mutate("2" = (New.F$'2' - New.F$Initial_Mean)) %>%
   mutate("4" = (New.F$'4' - New.F$Initial_Mean)) %>%
   mutate("7" = (New.F$'7' - New.F$Initial_Mean)) %>%
@@ -106,7 +107,7 @@ Growth_M <- New.F %>%
   mutate("16" = (New.F$'16' - New.F$Initial_Mean)) %>%
   mutate("18" = (New.F$'18' - New.F$Initial_Mean)) %>% 
   mutate(group = paste(New.F$Wound, New.F$Trt)) %>% 
-  pivot_longer(cols = (8:15), names_to = 'Time', values_to = 'Growth_Acc') %>%
+  pivot_longer(cols = c(8:15,17), names_to = 'Time', values_to = 'Growth_Acc') %>%
   mutate(Time = as.numeric(Time)) %>% 
   mutate(Times = as.factor(Time)) 
 
@@ -122,7 +123,7 @@ Biom_L <- Biom_T %>%
 Biom_L1 <- Biom_L %>% 
   merge(Mort_C, by = c('Identity', 'Bloc', 'Trt', 'Wound', 'Strain', 'Time')) %>% 
   mutate(Biomass = Mean*(10-Mort_Acc))
-write_csv(Biom_L1, "C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Biomasse.csv") 
+write_csv(Biom_L1, "C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Biomasse.csv") 
 
 
 Max_Biom <- Biom_L1 %>% 
@@ -149,6 +150,10 @@ Mort_C_graph <- Mort_C %>%
   Wound == "Non" ~ "Control"
 ))
 
+
+
+
+
 library(tidyplots)
 
 Mort_C_graph %>% 
@@ -159,10 +164,34 @@ Mort_C_graph %>%
   add_annotation_line(x = 9, xend = 9, y = 15.5, yend = 16) %>% 
   add_annotation_line(x = 18, xend = 18, y = 15.5, yend = 16) %>% 
   add_annotation_text("***", x = 13.535, y = 16.2, fontsize = 14) %>%
-  adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
-  adjust_y_axis(padding = c(0,0), limits = c(0,16.8), title = "Mortality (%)") %>% 
+  adjust_x_axis(padding = c(0,0), limits = c(0,18.1), title = "Time (Days)") %>% 
+  adjust_y_axis(padding = c(0,0), limits = c(0,16.8), title = "Accumulated mortality (%)") %>% 
   adjust_size(width = 200, height = 100) %>% 
-  save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Exp3.png")
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Exp3.png")
+
+
+Growth_C_graph <- Growth_M %>% 
+  group_by(Wound, Time) %>% 
+  summarise(Growth = mean(Growth_Acc),
+            SD_G = sd(Growth_Acc)) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  ))
+
+
+G1 <- Growth_C_graph %>% 
+  tidyplot(x = Time, y = Growth, colour = Wound) %>% 
+  add_line(linewidth = 0.8,alpha = 0.8, dodge_width = ) %>% 
+  adjust_colors(c("#013928","darkred","sienna")) %>% 
+  adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
+  adjust_y_axis(padding = c(0,0.01),title = "Accumulated biomass (%)") %>% 
+  adjust_size(width = 200, height = 100) 
+
+G2 <- G1 + ggplot2::geom_ribbon(data = Growth_C_graph, aes(x = Time,ymin = Growth - SD_G, ymax = Growth + SD_G, fill = Wound),linetype = 0, alpha = 0.2)  
+save_plot(G1,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Growth_Exp3.png")
+save_plot(G2,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Growth2_Exp3.png")
 
 
 #####PotentialGraphs#####
