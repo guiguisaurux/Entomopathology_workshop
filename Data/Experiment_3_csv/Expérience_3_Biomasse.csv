@@ -1956,7 +1956,7 @@ Identity,Bloc,Trt,Wound,Strain,Time,Initial_Mass,Initial_Number,Initial_Mean,Mea
 4-Ita2LevNon-B2,B2,Lev,Non,Ita,11,6305,10,630.5,1204.2,Ita Non,0,11,12042
 4-Ita2LevNon-B2,B2,Lev,Non,Ita,14,6305,10,630.5,1361.5555555555557,Ita Non,1,14,12254
 4-Ita2LevNon-B2,B2,Lev,Non,Ita,16,6305,10,630.5,1378.5555555555557,Ita Non,1,16,12407
-4-Ita2LevNon-B2,B2,Lev,Non,Ita,18,6305,10,630.5,1229.2,Ita Non,0,18,12292
+4-Ita2LevNon-B2,B2,Lev,Non,Ita,18,6305,10,630.5,1229.2,Ita Non,1,18,11062.800000000001
 4-Ita2LevNon-B2,B2,Lev,Non,Ita,2,6305,10,630.5,792.2,Ita Non,0,2,7922
 4-Ita2LevNon-B2,B2,Lev,Non,Ita,4,6305,10,630.5,903.9,Ita Non,0,4,9039
 4-Ita2LevNon-B2,B2,Lev,Non,Ita,7,6305,10,630.5,924.9,Ita Non,0,7,9249
