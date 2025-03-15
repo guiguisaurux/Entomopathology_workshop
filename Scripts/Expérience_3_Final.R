@@ -132,11 +132,15 @@ Max_Biom <- Biom_L1 %>%
   ungroup() %>% 
   select(-Initial_Mass,-Initial_Number,-Initial_Mean,-Mort_Acc,-group,-Times,-Mean) %>% 
   pivot_wider(names_from = "Time", values_from = "Biomass") %>% 
-  select(-c(7,8,10:15)) 
+  select(-c(7,8,10:13,15)) 
 
 Jour_14 <- Max_Biom %>% 
   mutate(Jour14 = Max_Biom$'14') %>% 
   mutate(Diff = MaxBiom - Max_Biom$'14')
+
+Jour_7 <- Max_Biom %>% 
+  mutate(Jour7 = Max_Biom$'7') %>% 
+  mutate(Diff = MaxBiom - Max_Biom$'7')
 
 
 #Gestion des graphs####
@@ -183,7 +187,7 @@ Growth_C_graph <- Growth_M %>%
 
 G1 <- Growth_C_graph %>% 
   tidyplot(x = Time, y = Growth, colour = Wound) %>% 
-  add_line(linewidth = 0.8,alpha = 0.8, dodge_width = ) %>% 
+  add_line(linewidth = 0.8,alpha = 0.8) %>% 
   adjust_colors(c("#013928","darkred","sienna")) %>% 
   adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
   adjust_y_axis(padding = c(0,0.01),title = "Accumulated biomass (%)") %>% 
@@ -193,6 +197,47 @@ G2 <- G1 + ggplot2::geom_ribbon(data = Growth_C_graph, aes(x = Time,ymin = Growt
 save_plot(G1,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Growth_Exp3.png")
 save_plot(G2,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Growth2_Exp3.png")
 
+
+#Biomass en fonction du temps
+Biom_Graph <- Biom_L1 %>% 
+  mutate(Time <- as.factor(Biom_L1$Time)) %>%  
+  mutate(Trt <- as.factor(Biom_L1$Trt)) %>% 
+  mutate(Wound <- as.factor(Biom_L1$Wound)) %>% 
+  mutate(Strain <- as.factor(Biom_L1$Strain)) %>% 
+  group_by(Time, Strain, Trt) %>% 
+  summarise(Biomass = mean(Biomass)) %>% 
+  #mutate(Wound = case_when(
+   # Wound == "Ste" ~ "Sterile",
+    #Wound == "Ser" ~ "Septic",
+  #  Wound == "Non" ~ "Control"
+  #)) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Con" ~ "Wheatbran",
+    Trt == "Bac" ~ "Bactocell",
+    Trt == "Lev" ~ "Levucell"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+    Strain == "Ita" ~ "Italy",
+    Strain == "Gre" ~ "Greece"
+  )) %>% 
+  mutate(Time = as.numeric(Time))
+
+
+Bio_Treat <- Biom_Graph %>% 
+  tidyplot(y = Biomass, x = Time, color = Strain) %>% 
+  add_line(linewidth = 0.8,alpha = 0.8) %>% 
+  adjust_colors(c("#812","#123765","#876212")) %>% 
+  split_plot(by = Treatment, widths = 150, heights = 100)
+    
+Bio_Strain <- Biom_Graph %>% 
+  tidyplot(y = Biomass, x = Time, color = Treatment) %>% 
+  add_line(linewidth = 0.8,alpha = 0.8) %>% 
+  adjust_colors(c("#013","#116735","#786512")) %>% 
+  split_plot(by = Strain, widths = 150, heights = 100)
+
+save_plot(Bio_Treat,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/BiomTreat_Exp3.png")
+save_plot(Bio_Strain,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/BiomStrain_Exp3.png")
 
 #####PotentialGraphs#####
 Max_Biom %>% 
