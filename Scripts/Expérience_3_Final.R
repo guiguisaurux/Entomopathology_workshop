@@ -199,7 +199,7 @@ save_plot(G2,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figure
 
 
 #Biomass en fonction du temps #####
-Biom_Graph <- Biom_L1 %>% 
+Biom_Graph_1 <- Biom_L1 %>% 
   mutate(Time <- as.factor(Biom_L1$Time)) %>%  
   mutate(Trt <- as.factor(Biom_L1$Trt)) %>% 
   mutate(Wound <- as.factor(Biom_L1$Wound)) %>% 
@@ -223,7 +223,7 @@ Biom_Graph <- Biom_L1 %>%
   )) %>% 
   mutate(Time = as.numeric(Time))
 
-Biom_Graph <- Biom_L1 %>% 
+Biom_Graph_2 <- Biom_L1 %>% 
   mutate(Time <- as.factor(Biom_L1$Time)) %>%  
   mutate(Trt <- as.factor(Biom_L1$Trt)) %>% 
   mutate(Wound <- as.factor(Biom_L1$Wound)) %>% 
@@ -238,7 +238,7 @@ Biom_Graph <- Biom_L1 %>%
   mutate(Time = as.numeric(Time))
 
 
-Biom_Graph %>% 
+Biom_Graph_2 %>% 
   tidyplot(y = Biomass, x = Time, color = Wound) %>%  
   add_line(linewidth = 0.8,alpha = 0.8) %>% 
   adjust_colors(c("#013928","darkred","sienna")) %>% 
@@ -248,20 +248,24 @@ Biom_Graph %>%
   save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_wound_Exp3.png")
 
 
-Bio_Treat <- Biom_Graph %>% 
+Bio_Treat <- Biom_Graph_1 %>% 
   tidyplot(y = Biomass, x = Time, color = Strain) %>% 
   add_line(linewidth = 0.8,alpha = 0.8) %>% 
   adjust_colors(c("#812","#123765","#876212")) %>% 
+  adjust_x_axis(title = "Time (Days)") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
   split_plot(by = Treatment, widths = 150, heights = 100)
     
-Bio_Strain <- Biom_Graph %>% 
+Bio_Strain <- Biom_Graph_1 %>% 
   tidyplot(y = Biomass, x = Time, color = Treatment) %>% 
   add_line(linewidth = 0.8,alpha = 0.8) %>% 
   adjust_colors(c("#013","#116735","#786512")) %>% 
+  adjust_x_axis(title = "Time (Days)") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
   split_plot(by = Strain, widths = 150, heights = 100)
 
-save_plot(Bio_Treat,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/BiomTreat_Exp3.png")
-save_plot(Bio_Strain,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/BiomStrain_Exp3.png")
+save_plot(Bio_Treat,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/BiomTreat_Exp3.png")
+save_plot(Bio_Strain,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/BiomStrain_Exp3.png")
 
 
 #Biomass Jour7 et 14####
@@ -305,6 +309,8 @@ Jour_7_Graph %>%
   add_sum_bar(alpha = 0.7) %>% 
   add_sum_dash() %>% 
   adjust_colors(c("#013","#116735","#786512")) %>% 
+  adjust_x_axis(title = "Mealworm Strain") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
   add_annotation_text(text = Jour_7_Graph$label, y = Jour_7_Graph$Position, 
                       x = c(0.727, 1, 1.277,1.727,2,2.277)) %>% 
   adjust_size(width = 150, height = 150) %>% 
@@ -331,13 +337,15 @@ Jour_14_Graph %>%
   add_sum_bar(alpha = 0.7) %>% 
   add_sum_dash() %>% 
   adjust_colors(c("#013","#116135","#786512")) %>% 
+  adjust_x_axis(title = "Mealworm Strain") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
   add_annotation_text(text = Jour_14_Graph$label, y = Jour_14_Graph$Position, 
                       x = c(0.727, 1, 1.277,1.727,2,2.277)) %>% 
   adjust_size(width = 150, height = 150) %>% 
   save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_trt_Day14_Exp3.png")
 
 
-#Souche italienne
+#Souche italienne####
 Jour_7_Graph_Ita <- Jour_7 %>% 
   mutate(Trt <- as.factor(Jour_7$Trt)) %>% 
   mutate(Wound <- as.factor(Jour_7$Wound)) %>% 
@@ -368,6 +376,8 @@ Jour_7_Graph_Ita %>%
   add_sum_bar(alpha = 0.7) %>% 
   add_sum_dash() %>% 
   adjust_colors(c("#013","#116735","#786512")) %>% 
+  adjust_x_axis(title = "Wound type") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
   add_annotation_text(text = Jour_7_Graph_Ita$label, y = Jour_7_Graph_Ita$Position, 
                       x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277)) %>% 
   adjust_size(width = 150, height = 150) %>% 
@@ -404,7 +414,9 @@ Jour_14_Graph_Ita %>%
   tidyplot(x = Wound, y = Jour14, color = Treatment) %>% 
   add_sum_bar(alpha = 0.7) %>% 
   add_sum_dash() %>% 
-  adjust_colors(c("#013","#116735","#786512")) %>% 
+  adjust_colors(c("#013","#116735","#786512")) %>%
+  adjust_x_axis(title = "Wound type") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
   add_annotation_text(text = Jour_14_Graph_Ita$label, y = Jour_14_Graph_Ita$Position, 
                       x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277)) %>% 
   adjust_size(width = 150, height = 150) %>% 
