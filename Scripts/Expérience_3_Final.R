@@ -74,8 +74,8 @@ New.T <- New.M %>%
   merge(Surv_long, by = c('Identity', 'Bloc', 'Trt', 'Wound', 'Strain', 'Day')) %>% 
   mutate(True_Mass = Mean * Survival)
 
-write_csv(New.T,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Masse_Transformée.csv") #MSI
-write_csv(New.T,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Masse_Transformée.csv") #DELL
+#write_csv(New.T,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Masse_Transformée.csv") #MSI
+#write_csv(New.T,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Masse_Transformée.csv") #DELL
 
 #Création tableau de croissances moyennes
 Growth_C <- New.F %>% 
@@ -92,8 +92,8 @@ Growth_C <- New.F %>%
   mutate(Time = as.numeric(Time)) %>% 
   mutate(Times = as.factor(Time))
 
-write_csv(Growth_C,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Moyenne.csv") #MSI
-write_csv(Growth_C,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Moyenne.csv") #DELL
+#write_csv(Growth_C,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Moyenne.csv") #MSI
+#write_csv(Growth_C,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Moyenne.csv") #DELL
 
 #Création tableau de la croissance cumulée
 Growth_M <- New.F %>% 
@@ -111,8 +111,8 @@ Growth_M <- New.F %>%
   mutate(Time = as.numeric(Time)) %>% 
   mutate(Times = as.factor(Time)) 
 
-write_csv(Growth_M,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Cumulée.csv") #MSI
-write_csv(Growth_M,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Cumulée.csv") #DELL
+#write_csv(Growth_M,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Cumulée.csv") #MSI
+#write_csv(Growth_M,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Croissance_Cumulée.csv") #DELL
 
 #Biomasse totale:
 Biom_T <- New.F %>% 
@@ -123,7 +123,7 @@ Biom_L <- Biom_T %>%
 Biom_L1 <- Biom_L %>% 
   merge(Mort_C, by = c('Identity', 'Bloc', 'Trt', 'Wound', 'Strain', 'Time')) %>% 
   mutate(Biomass = Mean*(10-Mort_Acc))
-write_csv(Biom_L1, "C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Biomasse.csv") 
+#write_csv(Biom_L1, "C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Data/Experiment_3_csv/Expérience_3_Biomasse.csv") 
 
 
 Max_Biom <- Biom_L1 %>% 
@@ -163,7 +163,7 @@ library(tidyplots)
 Mort_C_graph %>% 
   tidyplot(x = Time, y = Mortality, colour = Wound) %>% 
   add_line(linewidth = 0.8,alpha = 0.8, dodge_width = ) %>% 
-  adjust_colors(c("#013928","darkred","sienna")) %>% 
+  adjust_colors(c("#013928","darkred","lightblue")) %>% 
   add_annotation_line(x = 9, xend = 18, y = 16, yend = 16) %>% 
   add_annotation_line(x = 9, xend = 9, y = 15.5, yend = 16) %>% 
   add_annotation_line(x = 18, xend = 18, y = 15.5, yend = 16) %>% 
@@ -188,12 +188,14 @@ Growth_C_graph <- Growth_M %>%
 G1 <- Growth_C_graph %>% 
   tidyplot(x = Time, y = Growth, colour = Wound) %>% 
   add_line(linewidth = 0.8,alpha = 0.8) %>% 
-  adjust_colors(c("#013928","darkred","sienna")) %>% 
+  adjust_colors(c("#013928","darkred","lightblue")) %>% 
   adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
   adjust_y_axis(padding = c(0,0.01),title = "Accumulated biomass (%)") %>% 
   adjust_size(width = 200, height = 100) 
 
-G2 <- G1 + ggplot2::geom_ribbon(data = Growth_C_graph, aes(x = Time,ymin = Growth - SD_G, ymax = Growth + SD_G, fill = Wound),linetype = 0, alpha = 0.2)  
+G2 <- G1 + ggplot2::geom_ribbon(data = Growth_C_graph, 
+                                aes(x = Time,ymin = Growth - SD_G, ymax = Growth + SD_G, fill = Wound),
+                                linetype = 0, alpha = 0.2)  
 save_plot(G1,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Growth_Exp3.png")
 save_plot(G2,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Growth2_Exp3.png")
 
@@ -241,11 +243,11 @@ Biom_Graph_2 <- Biom_L1 %>%
 Biom_Graph_2 %>% 
   tidyplot(y = Biomass, x = Time, color = Wound) %>%  
   add_line(linewidth = 0.8,alpha = 0.8) %>% 
-  adjust_colors(c("#013928","darkred","sienna")) %>% 
+  adjust_colors(c("#013928","darkred","lightblue")) %>% 
   adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
   adjust_y_axis(padding = c(0,0.01),title = "Total biomass (%)") %>% 
   adjust_size(width = 200, height = 100) %>% 
-  save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_wound_Exp3.png")
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_wound_Exp3.png")
 
 
 Bio_Treat <- Biom_Graph_1 %>% 
@@ -264,8 +266,8 @@ Bio_Strain <- Biom_Graph_1 %>%
   adjust_y_axis(title = "Total biomass (%)") %>% 
   split_plot(by = Strain, widths = 150, heights = 100)
 
-save_plot(Bio_Treat,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/BiomTreat_Exp3.png")
-save_plot(Bio_Strain,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/BiomStrain_Exp3.png")
+save_plot(Bio_Treat,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/BiomTreat_Exp3.png")
+save_plot(Bio_Strain,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/BiomStrain_Exp3.png")
 
 
 #Biomass Jour7 et 14####
@@ -379,9 +381,9 @@ Jour_7_Graph_Ita %>%
   adjust_x_axis(title = "Wound type") %>% 
   adjust_y_axis(title = "Total biomass (%)") %>% 
   add_annotation_text(text = Jour_7_Graph_Ita$label, y = Jour_7_Graph_Ita$Position, 
-                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277)) %>% 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 15) %>% 
   adjust_size(width = 150, height = 150) %>% 
-  save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Ita_Wound_Exp3.png")
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Ita_Wound7_Exp3.png")
   
 #Jour14
 
@@ -418,13 +420,630 @@ Jour_14_Graph_Ita %>%
   adjust_x_axis(title = "Wound type") %>% 
   adjust_y_axis(title = "Total biomass (%)") %>% 
   add_annotation_text(text = Jour_14_Graph_Ita$label, y = Jour_14_Graph_Ita$Position, 
-                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277)) %>% 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277),fontsize = 15) %>% 
   adjust_size(width = 150, height = 150) %>% 
-  save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Ita_Wound14_Exp3.png")
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Ita_Wound14_Exp3.png")
 
 
+#Souche Grelienne####
+Jour_7_Graph_Gre <- Jour_7 %>% 
+  mutate(Trt <- as.factor(Jour_7$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_7$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_7$Strain)) %>% 
+  filter(Strain == c("Gre")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Con" ~ "Wheatbran",
+    Trt == "Bac" ~ "Bactocell",
+    Trt == "Lev" ~ "Levucell"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Gre" ~ "Greece",
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Wound, Treatment) %>% 
+  summarise(Jour7 = mean(Jour7),
+            Position = mean(Jour7) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("B", "A", "B","AB","A","B","A","A","B"))
 
+Jour_7_Graph_Gre %>% 
+  tidyplot(x = Wound, y = Jour7, color = Treatment) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#013","#116735","#786512")) %>% 
+  adjust_x_axis(title = "Wound type") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_7_Graph_Gre$label, y = Jour_7_Graph_Gre$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Gre_Wound_Exp3.png")
 
+#Jour14
+
+Jour_14_Graph_Gre <- Jour_14 %>% 
+  mutate(Trt <- as.factor(Jour_14$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_14$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_14$Strain)) %>% 
+  filter(Strain == c("Gre")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Con" ~ "Wheatbran",
+    Trt == "Bac" ~ "Bactocell",
+    Trt == "Lev" ~ "Levucell"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Gre" ~ "Greece",
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Wound, Treatment) %>% 
+  summarise(Jour14 = mean(Jour14),
+            Position = mean(Jour14) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("B", "A", "AB","A","A","A","A","A","A"))
+
+Jour_14_Graph_Gre %>% 
+  tidyplot(x = Wound, y = Jour14, color = Treatment) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#013","#116735","#786512")) %>%
+  adjust_x_axis(title = "Wound type") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_14_Graph_Gre$label, y = Jour_14_Graph_Gre$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277),fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Gre_Wound14_Exp3.png")
+
+#Souche Canlienne####
+Jour_7_Graph_Can <- Jour_7 %>% 
+  mutate(Trt <- as.factor(Jour_7$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_7$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_7$Strain)) %>% 
+  filter(Strain == c("Can")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Con" ~ "Wheatbran",
+    Trt == "Bac" ~ "Bactocell",
+    Trt == "Lev" ~ "Levucell"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Wound, Treatment) %>% 
+  summarise(Jour7 = mean(Jour7),
+            Position = mean(Jour7) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("A", "A", "A","A","A","A","A","A","A"))
+
+Jour_7_Graph_Can %>% 
+  tidyplot(x = Wound, y = Jour7, color = Treatment) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#013","#116735","#786512")) %>% 
+  adjust_x_axis(title = "Wound type") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_7_Graph_Can$label, y = Jour_7_Graph_Can$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Can_Wound_Exp3.png")
+
+#Jour14
+
+Jour_14_Graph_Can <- Jour_14 %>% 
+  mutate(Trt <- as.factor(Jour_14$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_14$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_14$Strain)) %>% 
+  filter(Strain == c("Can")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Con" ~ "Wheatbran",
+    Trt == "Bac" ~ "Bactocell",
+    Trt == "Lev" ~ "Levucell"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Wound, Treatment) %>% 
+  summarise(Jour14 = mean(Jour14),
+            Position = mean(Jour14) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("A", "A", "A","A","A","A","AB","A","B"))
+
+Jour_14_Graph_Can %>% 
+  tidyplot(x = Wound, y = Jour14, color = Treatment) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#013","#116735","#786512")) %>%
+  adjust_x_axis(title = "Wound type") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_14_Graph_Can$label, y = Jour_14_Graph_Can$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277),fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Can_Wound14_Exp3.png")
+
+#Traitement Son de blé####
+Jour_7_Graph_Con <- Jour_7 %>% 
+  mutate(Trt <- as.factor(Jour_7$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_7$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_7$Strain)) %>% 
+  filter(Trt == c("Con")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Con" ~ "Wheatbran"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+    Strain == "Ita" ~ "Italy",
+    Strain == "Gre" ~ "Greece"
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Wound, Strain) %>% 
+  summarise(Jour7 = mean(Jour7),
+            Position = mean(Jour7) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("B", "AB", "A","B","A","A","B","B","A"))
+
+Jour_7_Graph_Con %>% 
+  tidyplot(x = Wound, y = Jour7, color = Strain) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#812","#123765","#876212")) %>% 
+  adjust_x_axis(title = "Wound type") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_7_Graph_Con$label, y = Jour_7_Graph_Con$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Con_Wound7_Exp3.png")
+
+#Jour14
+
+#Traitement Son de blé####
+Jour_14_Graph_Con <- Jour_14 %>% 
+  mutate(Trt <- as.factor(Jour_14$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_14$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_14$Strain)) %>% 
+  filter(Trt == c("Con")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Con" ~ "Wheatbran"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+    Strain == "Ita" ~ "Italy",
+    Strain == "Gre" ~ "Greece"
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Wound, Strain) %>% 
+  summarise(Jour14 = mean(Jour14),
+            Position = mean(Jour14) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("B", "A", "A","B","A","A","B","AB","A"))
+
+Jour_14_Graph_Con %>% 
+  tidyplot(x = Wound, y = Jour14, color = Strain) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#812","#123765","#876212")) %>% 
+  adjust_x_axis(title = "Wound type") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_14_Graph_Con$label, y = Jour_14_Graph_Con$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Con_Wound14_Exp3.png")
+#Traitement Bactocell####
+Jour_7_Graph_Bac <- Jour_7 %>% 
+  mutate(Trt <- as.factor(Jour_7$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_7$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_7$Strain)) %>% 
+  filter(Trt == c("Bac")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Bac" ~ "Bactocell"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+    Strain == "Ita" ~ "Italy",
+    Strain == "Gre" ~ "Greece"
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Wound, Strain) %>% 
+  summarise(Jour7 = mean(Jour7),
+            Position = mean(Jour7) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("B", "A", "AB","B","A","B","B","A","B"))
+
+Jour_7_Graph_Bac %>% 
+  tidyplot(x = Wound, y = Jour7, color = Strain) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#812","#123765","#876212")) %>% 
+  adjust_x_axis(title = "Wound type") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_7_Graph_Bac$label, y = Jour_7_Graph_Bac$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Bac_Wound7_Exp3.png")
+
+#Jour14
+
+#Traitement Bactocell####
+Jour_14_Graph_Bac <- Jour_14 %>% 
+  mutate(Trt <- as.factor(Jour_14$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_14$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_14$Strain)) %>% 
+  filter(Trt == c("Bac")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Bac" ~ "Bactocell"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+    Strain == "Ita" ~ "Italy",
+    Strain == "Gre" ~ "Greece"
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Wound, Strain) %>% 
+  summarise(Jour14 = mean(Jour14),
+            Position = mean(Jour14) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("A", "A", "A","B","A","B","B","A","AB"))
+
+Jour_14_Graph_Bac %>% 
+  tidyplot(x = Wound, y = Jour14, color = Strain) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#812","#123765","#876212")) %>% 
+  adjust_x_axis(title = "Wound type") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_14_Graph_Bac$label, y = Jour_14_Graph_Bac$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Bac_Wound14_Exp3.png")
+
+#Traitement Levucell####
+Jour_7_Graph_Lev <- Jour_7 %>% 
+  mutate(Trt <- as.factor(Jour_7$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_7$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_7$Strain)) %>% 
+  filter(Trt == c("Lev")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Lev" ~ "Levucell"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+    Strain == "Ita" ~ "Italy",
+    Strain == "Gre" ~ "Greece"
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Wound, Strain) %>% 
+  summarise(Jour7 = mean(Jour7),
+            Position = mean(Jour7) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("C", "A", "B","B","A","A","B","A","A"))
+
+Jour_7_Graph_Lev %>% 
+  tidyplot(x = Wound, y = Jour7, color = Strain) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#812","#123765","#876212")) %>% 
+  adjust_x_axis(title = "Wound type") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_7_Graph_Lev$label, y = Jour_7_Graph_Lev$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Lev_Wound7_Exp3.png")
+
+#Jour14
+
+#Traitement Levucell####
+Jour_14_Graph_Lev <- Jour_14 %>% 
+  mutate(Trt <- as.factor(Jour_14$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_14$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_14$Strain)) %>% 
+  filter(Trt == c("Lev")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Lev" ~ "Levucell"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+    Strain == "Ita" ~ "Italy",
+    Strain == "Gre" ~ "Greece"
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Wound, Strain) %>% 
+  summarise(Jour14 = mean(Jour14),
+            Position = mean(Jour14) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("B", "A", "B","B","AB","A","A","A","A"))
+
+Jour_14_Graph_Lev %>% 
+  tidyplot(x = Wound, y = Jour14, color = Strain) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#812","#123765","#876212")) %>% 
+  adjust_x_axis(title = "Wound type") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_14_Graph_Lev$label, y = Jour_14_Graph_Lev$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Lev_Wound14_Exp3.png")
+
+#Traitement Son de blé diff blessures####
+Jour_7_Graph_Wound_Con <- Jour_7 %>% 
+  mutate(Trt <- as.factor(Jour_7$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_7$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_7$Strain)) %>% 
+  filter(Trt == c("Con")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Con" ~ "Wheatbran"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+    Strain == "Ita" ~ "Italy",
+    Strain == "Gre" ~ "Greece"
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Strain, Wound) %>% 
+  summarise(Jour7 = mean(Jour7),
+            Position = mean(Jour7) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("A", "B", "A","A","B","B","A","B","A"))
+
+Jour_7_Graph_Wound_Con %>% 
+  tidyplot(x = Strain, y = Jour7, color = Wound) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#013928","darkred","lightblue")) %>% 
+  adjust_x_axis(title = "Strain") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_7_Graph_Wound_Con$label, y = Jour_7_Graph_Wound_Con$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Con_Strain7_Exp3.png")
+
+#Jour14
+
+#Traitement Son de blé diff blessures####
+Jour_14_Graph_Wound_Con <- Jour_14 %>% 
+  mutate(Trt <- as.factor(Jour_14$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_14$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_14$Strain)) %>% 
+  filter(Trt == c("Con")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Con" ~ "Wheatbran"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+    Strain == "Ita" ~ "Italy",
+    Strain == "Gre" ~ "Greece"
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Strain, Wound) %>% 
+  summarise(Jour14 = mean(Jour14),
+            Position = mean(Jour14) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("A", "C", "B","A","C","B","A","B","A"))
+
+Jour_14_Graph_Wound_Con %>% 
+  tidyplot(x = Strain, y = Jour14, color = Wound) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#013928","darkred","lightblue")) %>% 
+  adjust_x_axis(title = "Strain") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_14_Graph_Wound_Con$label, y = Jour_14_Graph_Wound_Con$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Con_Strain14_Exp3.png")
+#Traitement Bactocell diff blessures####
+Jour_7_Graph_Wound_Bac <- Jour_7 %>% 
+  mutate(Trt <- as.factor(Jour_7$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_7$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_7$Strain)) %>% 
+  filter(Trt == c("Bac")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Bac" ~ "Bactocell"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+    Strain == "Ita" ~ "Italy",
+    Strain == "Gre" ~ "Greece"
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Strain, Wound) %>% 
+  summarise(Jour7 = mean(Jour7),
+            Position = mean(Jour7) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("A", "C", "B","A","B","A","A","C","B"))
+
+Jour_7_Graph_Wound_Bac %>% 
+  tidyplot(x = Strain, y = Jour7, color = Wound) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#013928","darkred","lightblue")) %>% 
+  adjust_x_axis(title = "Strain") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_7_Graph_Wound_Bac$label, y = Jour_7_Graph_Wound_Bac$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Bac_Strain7_Exp3.png")
+
+#Jour14
+
+#Traitement Bactocell diff blessures####
+Jour_14_Graph_Wound_Bac <- Jour_14 %>% 
+  mutate(Trt <- as.factor(Jour_14$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_14$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_14$Strain)) %>% 
+  filter(Trt == c("Bac")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Bac" ~ "Bactocell"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+    Strain == "Ita" ~ "Italy",
+    Strain == "Gre" ~ "Greece"
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Strain, Wound) %>% 
+  summarise(Jour14 = mean(Jour14),
+            Position = mean(Jour14) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("A", "C", "B","A","B","A","A","C","B"))
+
+Jour_14_Graph_Wound_Bac %>% 
+  tidyplot(x = Strain, y = Jour14, color = Wound) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#013928","darkred","lightblue")) %>% 
+  adjust_x_axis(title = "Strain") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_14_Graph_Wound_Bac$label, y = Jour_14_Graph_Wound_Bac$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Bac_Strain14_Exp3.png")
+
+#Traitement Levucell diff blessures####
+Jour_7_Graph_Wound_Lev <- Jour_7 %>% 
+  mutate(Trt <- as.factor(Jour_7$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_7$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_7$Strain)) %>% 
+  filter(Trt == c("Lev")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Lev" ~ "Levucell"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+    Strain == "Ita" ~ "Italy",
+    Strain == "Gre" ~ "Greece"
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Strain, Wound) %>% 
+  summarise(Jour7 = mean(Jour7),
+            Position = mean(Jour7) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("A", "B", "A","A","C","B","A","B","A"))
+
+Jour_7_Graph_Wound_Lev %>% 
+  tidyplot(x = Strain, y = Jour7, color = Wound) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#013928","darkred","lightblue")) %>% 
+  adjust_x_axis(title = "Strain") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_7_Graph_Wound_Lev$label, y = Jour_7_Graph_Wound_Lev$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Lev_Strain7_Exp3.png")
+
+#Jour14
+
+#Traitement Levucell diff blessures####
+Jour_14_Graph_Wound_Lev <- Jour_14 %>% 
+  mutate(Trt <- as.factor(Jour_14$Trt)) %>% 
+  mutate(Wound <- as.factor(Jour_14$Wound)) %>% 
+  mutate(Strain <- as.factor(Jour_14$Strain)) %>% 
+  filter(Trt == c("Lev")) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Lev" ~ "Levucell"
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+    Strain == "Ita" ~ "Italy",
+    Strain == "Gre" ~ "Greece"
+  )) %>% 
+  mutate(Wound = case_when(
+    Wound == "Ste" ~ "Sterile",
+    Wound == "Ser" ~ "Septic",
+    Wound == "Non" ~ "Control"
+  )) %>% 
+  group_by(Strain, Wound) %>% 
+  summarise(Jour14 = mean(Jour14),
+            Position = mean(Jour14) + 450
+  ) %>% 
+  ungroup() %>% 
+  mutate(label = c("A", "B", "A","A","C","B","A","B","A"))
+
+Jour_14_Graph_Wound_Lev %>% 
+  tidyplot(x = Strain, y = Jour14, color = Wound) %>% 
+  add_sum_bar(alpha = 0.7) %>% 
+  add_sum_dash() %>% 
+  adjust_colors(c("#013928","darkred","lightblue")) %>% 
+  adjust_x_axis(title = "Strain") %>% 
+  adjust_y_axis(title = "Total biomass (%)") %>% 
+  add_annotation_text(text = Jour_14_Graph_Wound_Lev$label, y = Jour_14_Graph_Wound_Lev$Position, 
+                      x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 15) %>% 
+  adjust_size(width = 150, height = 150) %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_Lev_Strain14_Exp3.png")
 
 #####PotentialGraphs#####
 Max_Biom %>% 
