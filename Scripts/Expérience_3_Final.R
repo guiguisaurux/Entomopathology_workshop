@@ -151,11 +151,14 @@ Mort_C_graph <- Mort_C %>%
   mutate(Wound = case_when(
   Wound == "Ste" ~ "Sterile",
   Wound == "Ser" ~ "Septic",
-  Wound == "Non" ~ "Control"
-))
+  Wound == "Non" ~ "None"
+)) 
 
 
 
+
+
+Mort_C_graph$Wound = factor(Mort_C_graph$Wound, levels = c("Septic", "Sterile", "None"))
 
 
 library(tidyplots)
@@ -163,7 +166,7 @@ library(tidyplots)
 Mort_C_graph %>% 
   tidyplot(x = Time, y = Mortality, colour = Wound) %>% 
   add_line(linewidth = 0.8,alpha = 0.8, dodge_width = ) %>% 
-  adjust_colors(c("#013928","darkred","lightblue")) %>% 
+  adjust_colors(c("#012456","#096","yellow")) %>% 
   add_annotation_line(x = 9, xend = 18, y = 16, yend = 16) %>% 
   add_annotation_line(x = 9, xend = 9, y = 15.5, yend = 16) %>% 
   add_annotation_line(x = 18, xend = 18, y = 15.5, yend = 16) %>% 
@@ -171,7 +174,7 @@ Mort_C_graph %>%
   adjust_x_axis(padding = c(0,0), limits = c(0,18.1), title = "Time (Days)") %>% 
   adjust_y_axis(padding = c(0,0), limits = c(0,16.8), title = "Accumulated mortality (%)") %>% 
   adjust_size(width = 200, height = 100) %>% 
-  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Exp3.png")
+  save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Exp3.tiff")
 
 
 Growth_C_graph <- Growth_M %>% 
