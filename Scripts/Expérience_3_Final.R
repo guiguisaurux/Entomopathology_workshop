@@ -8,7 +8,6 @@ library(lme4)
 library(lmerTest)
 library(vegan)
 
-
 New$Identity <- as.factor(New$Identity) 
 New$Bloc <- as.factor(New$Bloc) 
 New$Trt <- as.factor(New$Trt)  
@@ -166,15 +165,16 @@ library(tidyplots)
 Mort_C_graph %>% 
   tidyplot(x = Time, y = Mortality, colour = Wound) %>% 
   add_line(linewidth = 0.8,alpha = 0.8, dodge_width = ) %>% 
-  adjust_colors(c("#012456","#096","yellow")) %>% 
+  adjust_colors(c("#012456","#096","gold")) %>% 
   add_annotation_line(x = 9, xend = 18, y = 16, yend = 16) %>% 
   add_annotation_line(x = 9, xend = 9, y = 15.5, yend = 16) %>% 
   add_annotation_line(x = 18, xend = 18, y = 15.5, yend = 16) %>% 
   add_annotation_text("***", x = 13.535, y = 16.2, fontsize = 14) %>%
   adjust_x_axis(padding = c(0,0), limits = c(0,18.1), title = "Time (Days)") %>% 
-  adjust_y_axis(padding = c(0,0), limits = c(0,16.8), title = "Accumulated mortality (%)") %>% 
+  adjust_y_axis(padding = c(0,0), limits = c(0,16.8), title = "Accumulated Mortality (%)") %>% 
   adjust_size(width = 200, height = 100) %>% 
-  save_plot("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Exp3.tiff")
+  adjust_font(fontsize = 12, family = "serif") %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Mortality_Exp3.tiff")
 
 
 Growth_C_graph <- Growth_M %>% 
