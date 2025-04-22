@@ -186,7 +186,7 @@ Grèce	GreESte	8	E	Ste	10	9	10	10	10	8	8	4	4	4	4	4
 Italie	ItaESte	8	E	Ste	10	10	10	9	9	9	8	5	3	1	1	1
 Canada	CanESte	8	E	Ste	10	10	10	10	10	9	8	7	6	4	4	4
 Grèce	GreCSte	8	C	Ste	10	10	10	9	9	9	4	2	2	1	1	1
-Canada	CanCSte	8	C	Ste	10	10	10	10	0	6	3	0	0	0	0	0
+Canada	CanCSte	8	C	Ste	10	10	10	10	10	6	3	0	0	0	0	0
 Italie	ItaCSte	8	C	Ste	10	10	10	10	8	3	2	2	1	1	0	0
 Canada	CanCBact	8	C	Bact	10	10	10	7	7	6	6	3	0	0	0	0
 Italie	ItaCBact	8	C	Bact	10	10	10	10	10	5	2	1	0	0	0	0

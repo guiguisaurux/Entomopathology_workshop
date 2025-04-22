@@ -154,17 +154,34 @@ ModVer_Tukey <- emmeans(ModVer, ~Souche)
 tuk.cld.ModVer <- cld(ModVer_Tukey, Letters = letters, adjust = "sidak")
 tuk.cld.ModVer
 
+CroG <- CroG %>% 
+  mutate(Traitement = case_when(
+    Traitement == "C" ~ "Wheatbran",
+    Traitement == "P" ~ "Bactocell",
+    Traitement == "D" ~ "Levucell",
+    Traitement == "E" ~ "Chickpea"
+  )) %>% 
+  mutate(Souche = case_when(
+    Souche == "Canada" ~ "Canada",
+    Souche == "Italie" ~ "Italy",
+    Souche == "Grèce" ~ "Greece"
+  ))
+
 
 CroG %>% 
   tidyplot(x = Souche, y = Ini, color = Souche) %>% 
-  add_boxplot(alpha = 0.6) %>%
+  add_mean_bar(alpha = 0.4) %>%
+  add_sd_errorbar() %>% 
+  add_mean_dash() %>% 
   add_test_asterisks(hide_info = TRUE,ref.group = 3, p.adjust.method = "holm") %>%
   remove_legend() %>%
-  adjust_y_axis_title(title = 'Masse initiale (µg)') %>%
+  adjust_y_axis_title(title = 'Initial Mean Biomass (µg/larvae)') %>%
   adjust_colors(new_colors = colors_discrete_friendly) %>%
-  adjust_size(width = 60, height = 60, unit = "mm") %>%
-  save_plot("Masse initiale.png")
+  adjust_size(width = 100, height = 100, unit = "mm") %>%
+  adjust_font(fontsize = 12, family = "serif") %>% 
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Initial_Biom_Exp2.tif")
   
+
 
 # II - Modèle# II - Motitle = dèle
 Mod1 <- lmer(Cro ~ Souche * Traitement + Sem + Sem:Souche + Traitement:Sem + 
@@ -223,7 +240,7 @@ CroG7 %>%
   adjust_colors(new_colors = colors_discrete_friendly) %>%
   adjust_size(width = 60, height = 60, unit = "mm") %>%
   view_plot(title = NULL) %>%
-  save_plot("Croissance semaine 7 Sou.png")
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Croissance semaine 7 Sou.png")
 
 CroG7 %>%
   tidyplot(x = Traitement, y = Cro, color = Traitement) %>%
@@ -234,7 +251,7 @@ CroG7 %>%
   adjust_colors(new_colors = colors_discrete_friendly_long) %>%
   adjust_size(width = 60, height = 60, unit = "mm") %>%
   view_plot(title = NULL)%>%
-  save_plot("Croissance semaine 7 Trt.png")
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Croissance semaine 7 Trt.png")
   
 rename_x_axis_labels(PlotCro7T, new_names = c("D" = '$italic(S.~cerevisiae)$',
 "P" = '$italic(P.~acidilactili)$',
@@ -283,7 +300,7 @@ letters_df.Mod8C <- data.frame(Traitement = tuk.cld.Mod8C$Traitement, letters = 
 letters_df.Mod8C
 
 #Italie
-Mod8I <- lmer(Italie ~ Traitement + (1|Bloc) + (1|Bloc:Traitement),data = CroG8S) 
+Mod8I <- lmer(Italy ~ Traitement + (1|Bloc) + (1|Bloc:Traitement),data = CroG8S) 
 plot(Mod8I)
 qqnorm(residuals(Mod8I))
 qqline(residuals(Mod8I), col = "red")
@@ -301,7 +318,7 @@ letters_df.Mod8I <- data.frame(Traitement = tuk.cld.Mod8I$Traitement, letters = 
 letters_df.Mod8I
 
 #Grèce
-Mod8G <- lmer(Grèce ~ Traitement + (1|Bloc) + (1|Bloc:Traitement),data = CroG8S) 
+Mod8G <- lmer(Greece ~ Traitement + (1|Bloc) + (1|Bloc:Traitement),data = CroG8S) 
 plot(Mod8G)
 qqnorm(residuals(Mod8G))
 qqline(residuals(Mod8G), col = "red")
@@ -324,7 +341,7 @@ CroG8T <- CroG8 %>%
               values_from = Cro)
 
 #E
-Mod8E <- lmer(E ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG8T) 
+Mod8E <- lmer(Chickpea ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG8T) 
 plot(Mod8E)
 qqnorm(residuals(Mod8E))
 qqline(residuals(Mod8E), col = "red")
@@ -342,7 +359,7 @@ letters_df.Mod8E <- data.frame(Souche = tuk.cld.Mod8E$Souche, letters = lettersM
 letters_df.Mod8E
 
 #C
-Mod8Cr <- lmer(C ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG8T) 
+Mod8Cr <- lmer(Wheatbran ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG8T) 
 plot(Mod8Cr)
 qqnorm(residuals(Mod8Cr))
 qqline(residuals(Mod8Cr), col = "red")
@@ -361,7 +378,7 @@ letters_df.Mod8Cr
 
 
 #D
-Mod8D <- lmer(D ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG8T) 
+Mod8D <- lmer(Levucell ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG8T) 
 plot(Mod8D)
 qqnorm(residuals(Mod8D))
 qqline(residuals(Mod8D), col = "red")
@@ -379,7 +396,7 @@ letters_df.Mod8D <- data.frame(Souche = tuk.cld.Mod8D$Souche, letters = lettersM
 letters_df.Mod8D
 
 #P
-Mod8P <- lmer(P ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG8T) 
+Mod8P <- lmer(Bactocell ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG8T) 
 plot(Mod8P)
 qqnorm(residuals(Mod8P))
 qqline(residuals(Mod8P), col = "red")
@@ -407,7 +424,7 @@ CroG8 %>%
   remove_x_axis_title() %>%
   remove_y_axis_title() %>%
   split_plot(by = Traitement, ncol = 4) %>%
-  save_plot("Croissance semaine 8 Sou.png")
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Croissance semaine 8 Sou.png")
 
 
 
@@ -422,7 +439,7 @@ CroG8 %>%
   remove_x_axis_title() %>%
   remove_y_axis_title() %>%
   split_plot(by = Souche, ncol = 4) %>%
-  save_plot("Croissance semaine 8 Trt.png")
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Croissance semaine 8 Trt.png")
 
 #Semaine 3####
 CroG9 <- CroG %>%
@@ -473,7 +490,7 @@ CroG9 %>%
   adjust_colors(new_colors = colors_discrete_friendly) %>%
   adjust_size(width = 60, height = 60, unit = "mm") %>%
   view_plot(title = NULL) %>%
-  save_plot("Croissance semaine 9 Sou.png")
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Croissance semaine 9 Sou.png")
 
 CroG9 %>%
   tidyplot(x = Traitement, y = Cro, color = Traitement) %>%
@@ -484,7 +501,7 @@ CroG9 %>%
   adjust_colors(new_colors = colors_discrete_friendly_long) %>%
   adjust_size(width = 60, height = 60, unit = "mm") %>%
   view_plot(title = NULL)%>%
-  save_plot("Croissance semaine 9 Trt.png")
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Croissance semaine 9 Trt.png")
 
 #Semaine 5####
 
@@ -528,7 +545,7 @@ letters_df.Mod10C <- data.frame(Traitement = tuk.cld.Mod10C$Traitement, letters 
 letters_df.Mod10C
 
 #Italie
-Mod10I <- lmer(Italie ~ Traitement + (1|Bloc) + (1|Bloc:Traitement),data = CroG10S) 
+Mod10I <- lmer(Italy ~ Traitement + (1|Bloc) + (1|Bloc:Traitement),data = CroG10S) 
 plot(Mod10I)
 qqnorm(residuals(Mod10I))
 qqline(residuals(Mod10I), col = "red")
@@ -546,7 +563,7 @@ letters_df.Mod10I <- data.frame(Traitement = tuk.cld.Mod10I$Traitement, letters 
 letters_df.Mod10I
 
 #Grèce
-Mod10G <- lmer(Grèce ~ Traitement + (1|Bloc) + (1|Bloc:Traitement),data = CroG10S) 
+Mod10G <- lmer(Greece ~ Traitement + (1|Bloc) + (1|Bloc:Traitement),data = CroG10S) 
 plot(Mod10G)
 qqnorm(residuals(Mod10G))
 qqline(residuals(Mod10G), col = "red")
@@ -583,7 +600,7 @@ CroG10T <- CroG10 %>%
               values_from = Cro)
 
 #E
-Mod10E <- lmer(E ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG10T) 
+Mod10E <- lmer(Chickpea ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG10T) 
 plot(Mod10E)
 qqnorm(residuals(Mod10E))
 qqline(residuals(Mod10E), col = "red")
@@ -601,7 +618,7 @@ letters_df.Mod10E <- data.frame(Souche = tuk.cld.Mod10E$Souche, letters = letter
 letters_df.Mod10E
 
 #C
-Mod10Cr <- lmer(C ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG10T) 
+Mod10Cr <- lmer(Wheatbran ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG10T) 
 plot(Mod10Cr)
 qqnorm(residuals(Mod10Cr))
 qqline(residuals(Mod10Cr), col = "red")
@@ -620,7 +637,7 @@ letters_df.Mod10Cr
 
 
 #D
-Mod10D <- lmer(D ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG10T) 
+Mod10D <- lmer(Levucell ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG10T) 
 plot(Mod10D)
 qqnorm(residuals(Mod10D))
 qqline(residuals(Mod10D), col = "red")
@@ -638,7 +655,7 @@ letters_df.Mod10D <- data.frame(Souche = tuk.cld.Mod10D$Souche, letters = letter
 letters_df.Mod10D
 
 #P
-Mod10P <- lmer(P ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG10T) 
+Mod10P <- lmer(Bactocell ~ Souche + (1|Bloc) + (1|Bloc:Souche),data = CroG10T) 
 plot(Mod10P)
 qqnorm(residuals(Mod10P))
 qqline(residuals(Mod10P), col = "red")
@@ -665,7 +682,7 @@ CroG10 %>%
   remove_x_axis_title() %>%
   remove_y_axis_title() %>%
   split_plot(by = Traitement, ncol = 4) %>%
-  save_plot("Croissance semaine 10 Sou.png")
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Croissance semaine 10 Sou.png")
 
 
   
@@ -680,7 +697,7 @@ CroG10 %>%
   remove_x_axis_title() %>%
   remove_y_axis_title() %>%
   split_plot(by = Souche, ncol = 4) %>%
-  save_plot("Croissance semaine 10 Trt.png")
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Croissance semaine 10 Trt.png")
 
 
 #Semaine 6####
@@ -733,7 +750,7 @@ CroG11 %>%
   adjust_colors(new_colors = colors_discrete_friendly) %>%
   adjust_size(width = 60, height = 60, unit = "mm") %>%
   view_plot(title = NULL) %>%
-  save_plot("Croissance semaine 11 Sou.png")
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Croissance semaine 11 Sou.png")
 
 CroG11 %>%
   tidyplot(x = Traitement, y = Cro, color = Traitement) %>%
@@ -744,7 +761,7 @@ CroG11 %>%
   adjust_colors(new_colors = colors_discrete_friendly_long) %>%
   adjust_size(width = 60, height = 60, unit = "mm") %>%
   view_plot(title = NULL)%>%
-  save_plot("Croissance semaine 11 Trt.png")
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Croissance semaine 11 Trt.png")
 
 
 
@@ -805,24 +822,111 @@ CroGL %>%
   remove_y_axis_title() %>%
   adjust_colors(new_colors = colors_discrete_friendly) %>%
   split_plot(by = Souche, widths = 110, heights = 80)  %>%
-  save_plot('Courbe1.png')
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Courbe1.png")
   
+CroC <- Cro %>%
+  dplyr::select( Rep,Bloc, Souche, Traitement,  Piq) %>%
+  mutate((Cro[,15] - Cro[,14])) %>%
+  mutate((Cro[,16] - Cro[,14])) %>%
+  mutate((Cro[,17] - Cro[,14])) %>%
+  mutate((Cro[,6] - Cro[,14])) %>%
+  mutate((Cro[,7] - Cro[,14])) %>% 
+  mutate((Cro[,14] - Cro[,14])) %>% 
+  pivot_longer(c(6:11),names_to = 'Time',values_to = 'Growth') %>% 
+  mutate(Time = as.integer(Time))
+
+CroCL <- CroC %>% 
+  mutate(Treatment = case_when(
+    Traitement == "C" ~ "Wheatbran",
+    Traitement == "P" ~ "Bactocell",
+    Traitement == "D" ~ "Levucell",
+    Traitement == "E" ~ "Chickpea"
+  )) %>% 
+  mutate(Strain = case_when(
+    Souche == "Canada" ~ "Canada",
+    Souche == "Italie" ~ "Italy",
+    Souche == "Grèce" ~ "Greece"
+  ))
+ 
   
 
-CroGL %>%
-  tidyplot(x = Sem, y = Cro, color = Souche, dodge_width = 0) %>%
-  add_sem_ribbon(alpha = 0.6) %>%
-  add_boxplot(box_width = 0.3, dodge_width = 0.35, color = 'black', alpha = 0.9) %>%
-  adjust_y_axis(limits = c(0,1500), breaks = c(0,300,600,900,1200,1500)) %>%
-  reorder_x_axis_labels(c('7','8','9')) %>%
-  remove_x_axis_title() %>%
-  remove_y_axis_title() %>%
+CroCL %>%
+  tidyplot(x = Time, y = Growth, color = Strain, dodge_width = 0) %>%
+  add_mean_line(linewidth = 0.8) %>%
+  add_mean_dot(alpha = 0.9) %>%
+  adjust_y_axis(limits = c(0,1500), breaks = c(0,300,600,900,1200,1500), title = "Mealworm Growth (µg)" ) %>%
+  adjust_x_axis(padding = c(0,0), title = "Time (Weeks)") %>% 
+  add_sd_errorbar() %>% 
   adjust_colors(new_colors = colors_discrete_friendly) %>%
-  split_plot(by = Traitement, widths = 130, heights = 80) %>%
-  save_plot('courbe2.png')
+  split_plot(by = Traitment, widths = 130, heights = 80) %>%
+  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/courbe2.png")
 
+#####Honors Graphs
+
+CroCL10 <- CroCL %>% 
+  filter(Time == 10) 
+
+StatsCro10 <- CroCL10 %>% 
+  group_by(Treatment, Strain) %>%
+  summarize(
+    mean = mean(Growth),
+    sd = sd(Growth),
+  ) %>% 
+  mutate(Placement = mean + sd + 50)
+
+print(CroCL10)
+
+
+Dataplace <- StatsCro10 %>% 
+  ungroup() %>% 
+  mutate(labelS = c('a','b','ab','a','ab','b','a','b','a','a','b','b') )
+
+CroCL10S <- CroCL10 %>% 
+  tidyplot(x = Treatment, y = Growth, color = Strain) %>% 
+  add_mean_bar(alpha = 0.4) %>%
+  add_mean_dash() %>% 
+  add_sd_errorbar() %>% 
+  adjust_y_axis(title = 'Mean Mealworm Growth (µg/larvae)') %>%
+  adjust_x_axis(title = 'Feed Treatments') %>% 
+  adjust_colors(c("#812","#123765","#876212")) %>%
+  adjust_size(width = 200, height = 100) %>% 
+  adjust_font(fontsize = 12, family = "serif")
+
+
+C1 <- CroCL10S +  ggplot2::geom_text(data = Dataplace, aes(y = Placement, label = labelS),
+                                   position = position_dodge(width = 0.8), show.legend = F)
   
+save_plot(C1, "C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Croissance_T_semaine_10_EXP2.tif")
 
 
-  
+StatsCro10 <- CroCL10 %>% 
+  group_by(Strain, Treatment) %>%
+  summarize(
+    mean = mean(Growth),
+    sd = sd(Growth),
+  ) %>% 
+  mutate(Placement = mean + sd + 50)
+
+print(CroCL10)
+
+
+Dataplace <- StatsCro10 %>% 
+  ungroup() %>% 
+  mutate(labelT = c('b','a','b','b','c','a','c','b','b','a','b','b')) 
+
+CroCL10T <- CroCL10 %>% 
+  tidyplot(x = Strain, y = Growth, color = Treatment) %>% 
+  add_mean_bar(alpha = 0.4) %>%
+  add_mean_dash() %>% 
+  add_sd_errorbar() %>% 
+  adjust_y_axis(title = 'Mean Mealworm Growth (µg/larvae)') %>%
+  adjust_x_axis(title = 'Mealworm Strains') %>% 
+  adjust_colors(c("#013","darkorange","#116735","#786512")) %>%
+  adjust_size(width = 200, height = 100) %>%
+  adjust_font(fontsize = 12, family = "serif")
+
+C2 <- CroCL10T +  ggplot2::geom_text(data = Dataplace, aes(y = Placement, label = labelT),
+                               position = position_dodge(width = 0.8), show.legend = F)
+
+save_plot(C2, "C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Croissance_S_semaine_10_EXP2.tif")
 
