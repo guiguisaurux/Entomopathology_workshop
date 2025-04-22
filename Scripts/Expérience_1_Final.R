@@ -604,7 +604,25 @@ biom_data_sum_strain <- biom_data %>%
     Strain == "Ita2" ~ "Italy 2",
     Strain == "Tur" ~ "Turkey",
     Strain == "Wor" ~ "Canada",
-    T ~ Strain)) 
+    T ~ Strain)) %>% 
+  mutate(Time = case_when(
+    Time == "0" ~ "0",
+    Time == "1" ~ "2",
+    Time == "2" ~ "3",
+    Time == "3" ~ "4",
+    Time == "4" ~ "5",
+    Time == "5" ~ "6",
+    Time == "6" ~ "7",
+    Time == "7" ~ "8",
+    Time == "8" ~ "9",
+    Time == "9" ~ "10",
+    Time == "10" ~ "11",
+    Time == "11" ~ "12",
+    Time == "12" ~ "13",
+    Time == "13" ~ "14",
+    Time == "14" ~ "15"
+  )) %>% 
+  mutate( Time = as.integer(Time))
 
 
 biom_data_sum_strain %>% 
@@ -612,9 +630,14 @@ biom_data_sum_strain %>%
   add_line(linewidth = 0.8, alpha = 0.75) %>% 
   adjust_colors(colors_discrete_okabeito) %>% 
   adjust_y_axis(title = "Total biomass (µg)") %>%
-  adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
+  adjust_x_axis(padding = c(0,0), title = "Time (Days)", limits = c(-0.2,15.2)) %>% 
   adjust_size(width = 200, height = 100) %>% 
-  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Biomass_by_Strain_Exp1.tif")
+  add_annotation_line(x = 0, xend = 0, y = 6250, yend = 6350, color = 'black') %>% 
+  add_annotation_line(x = 15, xend = 15, y = 6250, yend = 6350, color = 'black') %>% 
+  add_annotation_line(x = 0, xend = 15, y = 6350, yend = 6350, color = 'black') %>%
+  add_annotation_text(x = 9.5, y = 6375, "***", fontsize = 12) %>% 
+  adjust_font(fontsize = 12, family = "serif") %>%
+  save_plot("C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Biomass_by_Strain_Exp1.tif")
 
 
 biom_data_sum_Wound<- biom_data %>% 
@@ -624,7 +647,25 @@ biom_data_sum_Wound<- biom_data %>%
   mutate(Wound = case_when(
     Trt == "C" ~ "Sterile",
     Trt == "B" ~ "Septic"
-  ))
+  )) %>% 
+  mutate(Time = case_when(
+    Time == "0" ~ "0",
+    Time == "1" ~ "2",
+    Time == "2" ~ "3",
+    Time == "3" ~ "4",
+    Time == "4" ~ "5",
+    Time == "5" ~ "6",
+    Time == "6" ~ "7",
+    Time == "7" ~ "8",
+    Time == "8" ~ "9",
+    Time == "9" ~ "10",
+    Time == "10" ~ "11",
+    Time == "11" ~ "12",
+    Time == "12" ~ "13",
+    Time == "13" ~ "14",
+    Time == "14" ~ "15"
+  )) %>% 
+  mutate( Time = as.integer(Time))
 
 
 biom_data_sum_Wound %>% 
@@ -632,9 +673,14 @@ biom_data_sum_Wound %>%
   add_line(linewidth = 0.8, alpha = 0.75) %>% 
   adjust_colors(c("#012456","#096")) %>% 
   adjust_y_axis(title = "Total biomass (µg)") %>%
-  adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
+  adjust_x_axis(padding = c(0,0), title = "Time (Days)", limits = c(0,15.2)) %>% 
   adjust_size(width = 200, height = 100) %>% 
-  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Biomass_by_Wound_Exp1.tif")
+  add_annotation_line(x = 2, xend = 2, y = 6250, yend = 6350, color = 'black') %>% 
+  add_annotation_line(x = 15, xend = 15, y = 6250, yend = 6350, color = 'black') %>% 
+  add_annotation_line(x = 2, xend = 15, y = 6350, yend = 6350, color = 'black') %>%
+  add_annotation_text(x = 9.5, y = 6375, "***", fontsize = 12) %>% 
+  adjust_font(fontsize = 12, family = "serif") %>% 
+  save_plot("C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Biomass_by_Wound_Exp1.tif")
 
 #Final biomass:
 

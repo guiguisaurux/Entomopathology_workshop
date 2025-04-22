@@ -1134,7 +1134,7 @@ Jour_0T <- Jour_0 %>%
   add_mean_bar(alpha = 0.4) %>%
   add_mean_dash() %>% 
   add_sd_errorbar() %>% 
-  adjust_y_axis(title = 'Mean Mealworm Biomasslarvae)') %>%
+  adjust_y_axis(title = 'Mean Biomass (µ/larvae)') %>%
   adjust_x_axis(title = 'Mealworm Strains') %>% 
   adjust_colors(c("#013","#116735","#786512")) %>%
   adjust_size(width = 200, height = 100) %>%
