@@ -1060,6 +1060,90 @@ Jour_14_Graph_Wound_Lev %>%
   adjust_size(width = 150, height = 150) %>% adjust_font(fontsize = 12, family = "serif") %>% 
   save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Biomass_by_Lev_Strain14_Exp3.tif")
 
+
+
+#Df moyenne initiale####
+
+Jour_0 <- New.F %>% 
+  select(c(1:5)) %>% 
+  mutate(Jour0 = New.F$Initial_Mean) %>% 
+  mutate(Treatment = case_when(
+    Trt == "Lev" ~ "Levucell",
+    Trt == "Bac" ~ "Bactocell",
+    Trt == "Con" ~ "Wheatbran",
+  )) %>% 
+  mutate(Strain = case_when(
+    Strain == "Can" ~ "Canada",
+    Strain == "Ita" ~ "Italy",
+    Strain == "Gre" ~ "Greece"
+  )) 
+
+
+
+StatsJ0 <- Jour_0 %>% 
+  group_by(Treatment, Strain) %>%
+  summarize(
+    mean = mean(Jour0),
+    sd = sd(Jour0),
+  ) %>% 
+  mutate(Placement = mean + sd + 50)
+
+print(Jour_0)
+
+
+Dataplace <- StatsJ0 %>% 
+  ungroup() %>% 
+  mutate(labelS = c('c','a','b','b','a','a','c','b','a'))
+
+Jour_0S <- Jour_0 %>% 
+  tidyplot(x = Treatment, y = Jour0, color = Strain) %>% 
+  add_mean_bar(alpha = 0.4) %>%
+  add_mean_dash() %>% 
+  add_sd_errorbar() %>% 
+  adjust_y_axis(title = 'Mean Biomass (µg/larvae)') %>%
+  adjust_x_axis(title = 'Feed Treatments') %>% 
+  adjust_colors(c("#812","#123765","#876212")) %>%
+  adjust_size(width = 200, height = 100) %>% 
+  adjust_font(fontsize = 12, family = "serif")
+
+
+C1 <- Jour_0S +  ggplot2::geom_text(data = Dataplace, aes(y = Placement, label = labelS),
+                                    position = position_dodge(width = 0.8), show.legend = F)
+
+save_plot(C1, "C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Jour0S.tif")
+
+
+
+StatsCro10 <- Jour_0 %>% 
+  group_by(Strain, Treatment) %>%
+  summarize(
+    mean = mean(Jour0),
+    sd = sd(Jour0),
+  ) %>% 
+  mutate(Placement = mean + sd + 50)
+
+print(Jour_0)
+
+
+Dataplace <- StatsCro10 %>% 
+  ungroup() %>% 
+  mutate(labelT = c('b','a','b','b','a','c','b','a','a')) 
+
+Jour_0T <- Jour_0 %>% 
+  tidyplot(x = Strain, y = Jour0, color = Treatment) %>% 
+  add_mean_bar(alpha = 0.4) %>%
+  add_mean_dash() %>% 
+  add_sd_errorbar() %>% 
+  adjust_y_axis(title = 'Mean Biomass (µ/larvae)') %>%
+  adjust_x_axis(title = 'Mealworm Strains') %>% 
+  adjust_colors(c("#013","#116735","#786512")) %>%
+  adjust_size(width = 200, height = 100) %>%
+  adjust_font(fontsize = 12, family = "serif")
+
+C2 <- Jour_0T +  ggplot2::geom_text(data = Dataplace, aes(y = Placement, label = labelT),
+                                    position = position_dodge(width = 0.8), show.legend = F)
+
+save_plot(C2, "C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Jour0T.tif")
 #####PotentialGraphs#####
 Max_Biom %>% 
   tidyplot(x = Strain, y = MaxBiom, colour = Trt) %>% 

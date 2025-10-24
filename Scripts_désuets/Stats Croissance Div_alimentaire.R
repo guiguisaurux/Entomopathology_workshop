@@ -15,8 +15,8 @@ ensure_packages_installed <- function(packages) {
 }
 
 #Nécéssaire pour ce code
-packages <- c("dplyr", "tidyr", "ggplot2", "lme4", "lmerTest", 
-              "multcomp", "multcompView", "cowplot", "emmeans","tidyplots", "grDevices")
+packages <- c("ggplot2", "lme4", "lmerTest", 
+              "multcomp", "multcompView", "emmeans","tidyplots", "grDevices")
 
 
 ensure_packages_installed(packages)
@@ -176,10 +176,10 @@ CroG %>%
   add_test_asterisks(hide_info = TRUE,ref.group = 3, p.adjust.method = "holm") %>%
   remove_legend() %>%
   adjust_y_axis_title(title = 'Initial Mean Biomass (µg/larvae)') %>%
-  adjust_colors(new_colors = colors_discrete_friendly) %>%
+  adjust_colors(c("#812","#123765","#876212")) %>%
   adjust_size(width = 100, height = 100, unit = "mm") %>%
   adjust_font(fontsize = 12, family = "serif") %>% 
-  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Initial_Biom_Exp2.tif")
+  save_plot("C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Initial_Biom_Exp2.tif")
   
 
 
