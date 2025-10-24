@@ -1,5 +1,13 @@
 *.tif filter=lfs diff=lfs merge=lfs -text
 *.pptx filter=lfs diff=lfs merge=lfs -text
 *.tiff filter=lfs diff=lfs merge=lfs -text
+Figures/Figure_1.tif filter=lfs diff=lfs merge=lfs -text
+Figures/Figure_2.tif filter=lfs diff=lfs merge=lfs -text
+Figures/Figure_3.tif filter=lfs diff=lfs merge=lfs -text
+Figures/Figure_4.tif filter=lfs diff=lfs merge=lfs -text
+Figures/Figure_5.tif filter=lfs diff=lfs merge=lfs -text
+Figures/Figure_6.tif filter=lfs diff=lfs merge=lfs -text
+Figures/Figure_5.tiff filter=lfs diff=lfs merge=lfs -text
+Figures/Figure_7.tif filter=lfs diff=lfs merge=lfs -text
 *tif filter=lfs diff=lfs merge=lfs -text
 *tiff filter=lfs diff=lfs merge=lfs -text
