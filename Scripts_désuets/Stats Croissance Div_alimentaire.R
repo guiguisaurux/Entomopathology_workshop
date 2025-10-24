@@ -179,7 +179,15 @@ CroG %>%
   adjust_colors(c("#812","#123765","#876212")) %>%
   adjust_size(width = 100, height = 100, unit = "mm") %>%
   adjust_font(fontsize = 12, family = "serif") %>% 
+<<<<<<< HEAD
   save_plot("C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Initial_Biom_Exp2.tif")
+=======
+<<<<<<< HEAD
+  tidyplots::save_plot("C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Initial_Biom_Exp2.tif")
+=======
+  save_plot("C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Initial_Biom_Exp2.tif")
+>>>>>>> c7f00415a89012c514cf3651aa2e4913bd18dace
+>>>>>>> 90e0dd1 (trying)
   
 
 
@@ -214,6 +222,7 @@ Mod7S_Tukey <- emmeans(Mod7, ~Souche)
 
 
 tuk.cld.Mod7S <- cld(Mod7S_Tukey, Letters = letters, adjust = "sidak")
+
 tuk.cld.Mod7S
 
 lettersMod7S <- tuk.cld.Mod7S$.group
@@ -541,6 +550,7 @@ tuk.cld.Mod10C <- cld(Mod10C_Tukey, Letters = letters, adjust = "sidak")
 tuk.cld.Mod10C
 
 lettersMod10C <- tuk.cld.Mod10C$.group
+lettersMod10C <- c("b","a","a","a")
 letters_df.Mod10C <- data.frame(Traitement = tuk.cld.Mod10C$Traitement, letters = lettersMod10C)
 letters_df.Mod10C
 
@@ -559,6 +569,7 @@ tuk.cld.Mod10I <- cld(Mod10I_Tukey, Letters = letters, adjust = "sidak")
 tuk.cld.Mod10I
 
 lettersMod10I <- tuk.cld.Mod10I$.group
+lettersMod10I <- c("b","a","a","a")
 letters_df.Mod10I <- data.frame(Traitement = tuk.cld.Mod10I$Traitement, letters = lettersMod10I)
 letters_df.Mod10I
 
@@ -577,6 +588,7 @@ tuk.cld.Mod10G <- cld(Mod10G_Tukey, Letters = letters, adjust = "sidak")
 tuk.cld.Mod10G
 
 lettersMod10G <- tuk.cld.Mod10G$.group
+lettersMod10G <- c("c","b","a","a")
 letters_df.Mod10G <- data.frame(Traitement = tuk.cld.Mod10G$Traitement, letters = lettersMod10G)
 letters_df.Mod10G
 
@@ -614,6 +626,7 @@ tuk.cld.Mod10E <- cld(Mod10E_Tukey, Letters = letters, adjust = "sidak")
 tuk.cld.Mod10E
 
 lettersMod10E <- tuk.cld.Mod10E$.group
+lettersMod10E <- c("b","ab","a")
 letters_df.Mod10E <- data.frame(Souche = tuk.cld.Mod10E$Souche, letters = lettersMod10E)
 letters_df.Mod10E
 
@@ -632,6 +645,7 @@ tuk.cld.Mod10Cr <- cld(Mod10Cr_Tukey, Letters = letters, adjust = "sidak")
 tuk.cld.Mod10Cr
 
 lettersMod10Cr <- tuk.cld.Mod10Cr$.group
+lettersMod10Cr<- c("b","ab","a")
 letters_df.Mod10Cr <- data.frame(Souche = tuk.cld.Mod10Cr$Souche, letters = lettersMod10Cr)
 letters_df.Mod10Cr
 
@@ -651,6 +665,7 @@ tuk.cld.Mod10D <- cld(Mod10D_Tukey, Letters = letters, adjust = "Tukey")
 tuk.cld.Mod10D
 
 lettersMod10D <- tuk.cld.Mod10D$.group
+lettersMod10D <- c("b","a","a")
 letters_df.Mod10D <- data.frame(Souche = tuk.cld.Mod10D$Souche, letters = lettersMod10D)
 letters_df.Mod10D
 
@@ -669,6 +684,8 @@ tuk.cld.Mod10P <- cld(Mod10P_Tukey, Letters = letters, adjust = "sidak")
 tuk.cld.Mod10P
 
 lettersMod10P <- tuk.cld.Mod10P$.group
+
+lettersMod10P <- c("b","a","a")
 letters_df.Mod10P <- data.frame(Souche = tuk.cld.Mod10P$Souche, letters = lettersMod10P)
 letters_df.Mod10P
 
@@ -843,8 +860,8 @@ CroCL <- CroC %>%
     Traitement == "E" ~ "Chickpea"
   )) %>% 
   mutate(Strain = case_when(
-    Souche == "Canada" ~ "Canada",
-    Souche == "Italie" ~ "Italy",
+    Souche == "Canada" ~ "Canada 2",
+    Souche == "Italie" ~ "Italy 2",
     Souche == "Grèce" ~ "Greece"
   ))
  
@@ -879,23 +896,31 @@ print(CroCL10)
 
 Dataplace <- StatsCro10 %>% 
   ungroup() %>% 
-  mutate(labelS = c('a','b','ab','a','ab','b','a','b','a','a','b','b') )
+  mutate(labelS = c('b','a','ab','b','ab','a','b','a','b','b','a','a') )
 
 CroCL10S <- CroCL10 %>% 
   tidyplot(x = Treatment, y = Growth, color = Strain) %>% 
-  add_mean_bar(alpha = 0.4) %>%
+  add_mean_bar(alpha = 0.7) %>%
   add_mean_dash() %>% 
   add_sd_errorbar() %>% 
-  adjust_y_axis(title = 'Mean Mealworm Growth (µg/larvae)') %>%
-  adjust_x_axis(title = 'Feed Treatments') %>% 
-  adjust_colors(c("#812","#123765","#876212")) %>%
-  adjust_size(width = 200, height = 100) %>% 
-  adjust_font(fontsize = 12, family = "serif")
+  adjust_y_axis_title(title = 'Mean Mealworm Growth (µg/larvae)') %>%
+  adjust_x_axis_title(title = 'Feed Treatments') %>% 
+  #adjust_colors(strain_colors) %>%
+  #adjust_size(width = 200, height = 100) %>% 
+  My_Style( Size = "Wide", Color = "Strain", Limits = NULL) %>% 
+  adjust_font(fontsize = 24, family = "serif") +
+  ggplot2::theme(legend.key.size = unit(1.2, "cm"))
 
 
-C1 <- CroCL10S +  ggplot2::geom_text(data = Dataplace, aes(y = Placement, label = labelS),
-                                   position = position_dodge(width = 0.8), show.legend = F)
-  
+C1 <- CroCL10S +    ggplot2::geom_text(
+  data = Dataplace, 
+  aes(y = Placement, label = labelS, fontface = "bold"), 
+  position = position_dodge(width = 0.8),
+  #family = "serif", 
+  size = 6, # approx. 24 pts base on ggplot scaling
+  show.legend = FALSE
+)
+
 save_plot(C1, "C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Croissance_T_semaine_10_EXP2.tif")
 
 
@@ -912,21 +937,44 @@ print(CroCL10)
 
 Dataplace <- StatsCro10 %>% 
   ungroup() %>% 
-  mutate(labelT = c('b','a','b','b','c','a','c','b','b','a','b','b')) 
+  mutate(labelT = c('a','b','a','a','a','c','a','b','a','b','a','a')) 
 
 CroCL10T <- CroCL10 %>% 
   tidyplot(x = Strain, y = Growth, color = Treatment) %>% 
-  add_mean_bar(alpha = 0.4) %>%
+  add_mean_bar(alpha = 0.7) %>%
   add_mean_dash() %>% 
   add_sd_errorbar() %>% 
   adjust_y_axis(title = 'Mean Mealworm Growth (µg/larvae)') %>%
   adjust_x_axis(title = 'Mealworm Strains') %>% 
-  adjust_colors(c("#013","darkorange","#116735","#786512")) %>%
-  adjust_size(width = 200, height = 100) %>%
-  adjust_font(fontsize = 12, family = "serif")
+  My_Style( Size = "Wide", Color = "Treatment", Limits = NULL) %>% 
+  adjust_font(fontsize = 24, family = "serif") +
+  ggplot2::theme(legend.key.size = unit(1.2, "cm"))
 
-C2 <- CroCL10T +  ggplot2::geom_text(data = Dataplace, aes(y = Placement, label = labelT),
-                               position = position_dodge(width = 0.8), show.legend = F)
 
-save_plot(C2, "C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Croissance_S_semaine_10_EXP2.tif")
+C2 <- CroCL10T + ggplot2::geom_text(
+  data = Dataplace, 
+  aes(y = Placement, label = labelT, fontface = "bold"), 
+  position = position_dodge(width = 0.8),
+  #family = "serif", 
+  size = 6, # approx. 24 pts base on ggplot scaling
+  show.legend = FALSE
+)
+
+
+
+Plot_4 = plot_grid(
+  C1 + theme(plot.margin = margin(t = 20, b = 10, r = 10)),  # Premier graphique (CroSou)
+  C2 + theme(plot.margin = margin(t = 20, b = 10, r = 10)),  # Deuxième graphique (CroWound) 
+  labels = c("(A)", "(B)"),  # Adding labels
+  label_size = 30,           # Set label font size
+  label_fontface = "bold",   # Bold label font
+  label_colour = "black",    # Label color
+  ncol = 1,
+  rel_heights = c(1,1),
+  align = "left"# Arrange plots in 2 columns
+)
+
+
+tidyplots::save_plot(Plot_4, "C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Croissance_semaine_10_EXP2.tif", width = 620, height = 500,
+          limitsize = F)
 

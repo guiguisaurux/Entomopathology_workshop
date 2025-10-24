@@ -3,11 +3,17 @@ library(lme4)
 library(lmerTest)
 library(tidyverse)
 library(tidyplots)
+library(ggrepel)
+library(ggtext)
+library(cowplot)
+library(forcats)
+
+setwd("C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Data")
 
 #importation du tableau de donnée
 full_data <- read.table("Expérience1Souches.txt", header = T, check.names = F)
 
-#Séparation des données en tableau distincts####
+get#Séparation des données en tableau distincts####
 initial_mass <- full_data %>% 
   select(c(1:3))
 head(initial_mass)
@@ -142,7 +148,7 @@ mort_data_sum <- mort_data %>%
     Strain == "Ita1" ~ "Italy 1",
     Strain == "Ita2" ~ "Italy 2",
     Strain == "Tur" ~ "Turkey",
-    Strain == "Wor" ~ "Canada",
+    Strain == "Wor" ~ "Canada 1",
     T ~ Strain)) %>% 
   mutate(Wound = case_when(
     Trt == "C" ~ "Sterile",
@@ -169,43 +175,164 @@ mort_data_sum <- mort_data %>%
   
 
 
-mort_data_sum %>% 
+MortSep <- mort_data_sum %>% 
   filter(Wound == "Septic") %>% 
   tidyplot(x = Time, y = Mortality, color = Strain) %>% 
-  add_line(linewidth = 0.8, alpha = 0.75) %>% 
-  adjust_colors(colors_discrete_okabeito) %>% 
+  add_line(linewidth = 1.6, alpha = 0.75) %>% 
   adjust_y_axis(limits = c(0,40), title = "Mean cumulative mortality (%)") %>%
-  adjust_x_axis(padding = c(0,0), limits = c(0,15.1), title = "Time (Days)") %>% 
-  adjust_font(fontsize = 12, family = "serif") %>% 
-  adjust_size(width = 200, height = 100) %>% 
+  adjust_x_axis(padding = c(0,0), limits = c(0,17), breaks = c(0,3,6,9,12,15), title = "Time (Days)") %>% 
+  adjust_font(fontsize = 24, family = "serif") %>% 
+  #adjust_size(width = 200, height = 100) %>% 
   add_annotation_line(x = 8.2, xend = 8.2, y = 34, yend = 35, color = "black") %>% 
   add_annotation_line(x = 7.8, xend = 7.8, y = 34, yend = 35, color = "black") %>%
   add_annotation_line(x = 7.8, xend = 8.2, y = 35, yend = 35, color = "black") %>% 
   add_annotation_line(x = 10, xend = 10, y = 34, yend = 35, color = 'black') %>% 
   add_annotation_line(x = 15, xend = 15, y =34, yend = 35, color = 'black') %>% 
   add_annotation_line(x = 10, xend = 15, y = 35, yend = 35, color = 'black') %>% 
-  add_annotation_text(x = 8, y = 35.5, "*", fontsize = 12) %>% 
-  add_annotation_text(x = 12.5, y = 35.5, "***", fontsize = 12) %>% 
-  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Mortality_Septic_Exp1.tif")
+  add_annotation_text(x = 8, y = 35.5, "*", fontsize = 20) %>% 
+  add_annotation_text(x = 12.5, y = 35.5, "***", fontsize = 20) %>% 
+  My_Style(Size = "Wide", Color = "Strain", Limits = NULL) %>% 
+  remove_legend()
 
-mort_data_sum %>% 
+mort_data_sum_sep <- mort_data_sum %>% 
+  filter(Wound == "Septic")
+
+last_points_sep <- mort_data_sum_sep%>%
+  group_by(Strain) %>%
+  filter(Time == max(Time)) %>%
+  ungroup()
+
+MortSep1 <- MortSep + 
+  geom_text_repel(
+    data = last_points_sep,
+    aes(color = Strain, label = Strain),
+    family = "serif",
+    size = 7,
+    direction = "y",
+    xlim = c(15.8, NA),
+    hjust = 0,
+    segment.size = .75,
+    segment.alpha = .5,
+    segment.linetype = "dotted",
+    box.padding = .25,
+    segment.curvature = .05,
+    segment.ncp = 0.1,
+    segment.angle = 5
+  ) +
+  annotate(
+    "text",
+    x = 16.2,
+    y = 35,
+    label = "Strain",
+    family = "serif",
+    size = 7,
+    fontface = "bold"
+  ) +
+  theme(
+    axis.line.x = element_blank()  # Remove default axis line
+  ) +
+  annotate(
+    "segment",
+    x = 0, xend = 15,  # Only draw line up to 15
+    y = 0, yend = 0,
+    color = "black",
+    linewidth = 0.5
+  ) + 
+  theme(
+    axis.line.y = element_blank()
+  ) +
+  annotate(
+    "segment",
+    x = 0, xend = 0,
+    y = 0, yend = 50,
+    color = "black",
+    linewidth  = 0.5
+  )
+
+MortCon <- mort_data_sum %>% 
   filter(Wound == "Sterile") %>% 
   tidyplot(x = Time, y = Mortality, color = Strain) %>% 
-  add_line(linewidth = 0.8, alpha = 0.75) %>% 
-  adjust_colors(colors_discrete_okabeito) %>% 
+  add_line(linewidth = 1.6, alpha = 0.75) %>% 
   adjust_y_axis(limits = c(0,40), title = "Mean cumulative mortality (%)") %>%
-  adjust_x_axis(padding = c(0,0), limits = c(0,15.1), title = "Time (Days)") %>% 
-  adjust_font(fontsize = 12, family = "serif") %>%
-  adjust_size(width = 200, height = 100) %>% 
+  adjust_x_axis(padding = c(0,0), limits = c(0,17), breaks = c(0,3,6,9,12,15), title = "Time (Days)") %>% 
+  adjust_font(fontsize = 24, family = "serif") %>%
+  #adjust_size(width = 200, height = 100) %>% 
   add_annotation_line(x = 2, xend = 2, y = 34, yend = 35, color = 'black') %>% 
   add_annotation_line(x = 3, xend = 3, y =34, yend = 35, color = 'black') %>% 
   add_annotation_line(x = 2, xend = 3, y = 35, yend = 35, color = 'black') %>%
-  add_annotation_text(x = 2.5, y = 35.5, "***", fontsize = 12) %>% 
-  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Mortality_Sterile_Exp1.tif")
+  add_annotation_text(x = 2.5, y = 35.5, "***", fontsize = 20) %>% 
+  My_Style(Size = "Wide", Color = "Strain", Limits = NULL) %>% 
+  remove_legend()
 
 
+mort_data_sum_ste <- mort_data_sum %>% 
+  filter(Wound == "Sterile")
+
+last_points_ste <- mort_data_sum_ste%>%
+  group_by(Strain) %>%
+  filter(Time == max(Time)) %>%
+  ungroup()
+
+MortCon1 <- MortCon + 
+  geom_text_repel(
+    data = last_points_ste,
+    aes(color = Strain, label = Strain),
+    family = "serif",
+    size = 7,
+    direction = "y",
+    xlim = c(15.8, NA),
+    hjust = 0,
+    segment.size = .75,
+    segment.alpha = .5,
+    segment.linetype = "dotted",
+    box.padding = .25,
+    segment.curvature = .05,
+    segment.ncp = 0.1,
+    segment.angle = 5
+  ) +
+  annotate(
+    "text",
+    x = 16.2,
+    y = 16,
+    label = "Strain",
+    family = "serif",
+    size = 7,
+    fontface = "bold"
+  ) +
+  theme(
+    axis.line.x = element_blank()  # Remove default axis line
+  ) +
+  annotate(
+    "segment",
+    x = 0, xend = 15,  # Only draw line up to 15
+    y = 0, yend = 0,
+    color = "black",
+    linewidth = 0.5
+  ) + 
+  theme(
+    axis.line.y = element_blank()
+  ) +
+  annotate(
+    "segment",
+    x = 0, xend = 0,
+    y = 0, yend = 50,
+    color = "black",
+    linewidth  = 0.5
+  )
 
 
+library(cowplot)
+MortPercent <- plot_grid(
+  MortSep1 + theme(plot.margin = margin(t = 20, b = 10)),  # Adjusting margin for spacing
+  MortCon1+ theme(plot.margin = margin(t = 20, b = 10)), 
+  labels = c("(A)", "(B)"),  # Adding labels
+  label_size = 24,           # Set label font size
+  label_fontface = "bold",   # Bold label font
+  label_colour = "black",    # Label color
+  ncol = 1 # Arrange plots in 2 columns
+)
+
+tidyplots::save_plot(MortPercent, "C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Mortality_Sterile_Exp1.tif", width = 620, height = 500, limitsize = F)
 
 #Mortalité Finale#####
 
@@ -220,7 +347,7 @@ mort_data_final_1 <- mort_data %>%
     Strain == "Ita1" ~ "Italy 1",
     Strain == "Ita2" ~ "Italy 2",
     Strain == "Tur" ~ "Turkey",
-    Strain == "Wor" ~ "Canada",
+    Strain == "Wor" ~ "Canada 1",
     T ~ Strain)) %>% 
   mutate(Wound = case_when(
     Trt == "C" ~ "Sterile",
@@ -275,11 +402,11 @@ Vector_P_value <- c('*','n.s.','*','**','**','***','**','**','*','n.s.')
 Mort_final <- mort_data_final %>% 
   tidyplot(x = Strain, y = final_mort, color = Wound) %>% 
   add_mean_bar(alpha = 0.3) %>% 
-  add_mean_dash(linewidth = 0.6) %>%
+  add_mean_dash(linewidth = 1.2) %>%
   #add_data_points_jitter(jitter_height = 0) %>%
   #add_violin(alpha = 0) %>% 
-  adjust_colors(c("#012456","#096")) %>% 
-  adjust_size(width = 200, height = 100) %>% 
+  adjust_colors(wound_colors) %>% 
+  adjust_size(width = 400, height = 200) %>% 
   add_annotation_line(x = 0.8, xend = 1.2, y = Vector_plot[1], yend = Vector_plot[1]) %>% 
   add_annotation_line(x = 1.8, xend = 2.2, y = Vector_plot[2], yend = Vector_plot[2]) %>%
   add_annotation_line(x = 2.8, xend = 3.2, y = Vector_plot[3], yend = Vector_plot[3]) %>%
@@ -310,20 +437,20 @@ Mort_final <- mort_data_final %>%
   add_annotation_line(x = 8.2, xend = 8.2, y = Vector_plot1[8], yend = Vector_plot[8]) %>% 
   add_annotation_line(x = 9.2, xend = 9.2, y = Vector_plot1[9], yend = Vector_plot[9]) %>% 
   add_annotation_line(x = 10.2, xend = 10.2, y = Vector_plot1[10], yend = Vector_plot[10]) %>% 
-  add_annotation_text(x = 1.02, y = Vector_plot2[1], text = Vector_P_value[1], fontsize = 10) %>%
-  add_annotation_text(x = 2.03, y = 10, text = Vector_P_value[2], fontsize = 8) %>%
-  add_annotation_text(x = 3.02, y = Vector_plot2[3], text = Vector_P_value[3], fontsize = 10) %>%
-  add_annotation_text(x = 4.02, y = Vector_plot2[4], text = Vector_P_value[4], fontsize = 10) %>%
-  add_annotation_text(x = 5.02, y = Vector_plot2[5], text = Vector_P_value[5], fontsize = 10) %>%
-  add_annotation_text(x = 6.02, y = Vector_plot2[6], text = Vector_P_value[6], fontsize = 10) %>%
-  add_annotation_text(x = 7.02, y = Vector_plot2[7], text = Vector_P_value[7], fontsize = 10) %>%
-  add_annotation_text(x = 8.02, y = Vector_plot2[8], text = Vector_P_value[8], fontsize = 10) %>%
-  add_annotation_text(x = 9.02, y = Vector_plot2[9], text = Vector_P_value[9], fontsize = 10) %>%
-  add_annotation_text(x = 10.02, y = Vector_plot2[10] +0.5,text = Vector_P_value[10], fontsize = 10) %>% 
-  adjust_font(fontsize = 12, family = "serif") %>%
+  add_annotation_text(x = 1.02, y = Vector_plot2[1], text = Vector_P_value[1], fontsize = 20) %>%
+  add_annotation_text(x = 2.03, y = 10, text = Vector_P_value[2], fontsize = 16) %>%
+  add_annotation_text(x = 3.02, y = Vector_plot2[3], text = Vector_P_value[3], fontsize = 20) %>%
+  add_annotation_text(x = 4.02, y = Vector_plot2[4], text = Vector_P_value[4], fontsize = 20) %>%
+  add_annotation_text(x = 5.02, y = Vector_plot2[5], text = Vector_P_value[5], fontsize = 20) %>%
+  add_annotation_text(x = 6.02, y = Vector_plot2[6], text = Vector_P_value[6], fontsize = 20) %>%
+  add_annotation_text(x = 7.02, y = Vector_plot2[7], text = Vector_P_value[7], fontsize = 20) %>%
+  add_annotation_text(x = 8.02, y = Vector_plot2[8], text = Vector_P_value[8], fontsize = 20) %>%
+  add_annotation_text(x = 9.02, y = Vector_plot2[9], text = Vector_P_value[9], fontsize = 20) %>%
+  add_annotation_text(x = 10.02, y = Vector_plot2[10] +0.5,text = Vector_P_value[10], fontsize = 20) %>% 
+  adjust_font(fontsize = 24, family = "serif") %>%
   adjust_y_axis(title = "Mean cumulative mortality (%)") %>% 
   adjust_x_axis(title = "Mealworm Strains", rotate_labels = T) %>% 
-  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Final_Mortality_Exp1.tif")
+  tidyplots::save_plot("C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Final_Mortality_Exp1.tif")
   
 Mort_final
 
@@ -364,19 +491,19 @@ growth_data_sum_strain <- growth_data %>%
 
 
 
-growth_data_sum_strain %>% 
+CroSou <- growth_data_sum_strain %>% 
   tidyplot(x = Time, y = Growth, color = Strain) %>% 
   add_line(linewidth = 0.8, alpha = 0.75) %>% 
   adjust_colors(colors_discrete_okabeito) %>% 
   adjust_y_axis(padding = c(0,0), title = "Mean Growth (µg/larvae)", limits = c(0,455)) %>%
   adjust_x_axis(padding = c(0,0), title = "Time (Days)", limits = c(0,15.2)) %>% 
-  adjust_size(width = 200, height = 100) %>% 
+  adjust_size(width = 100, height = 100) %>% 
   add_annotation_line(x = 2, xend = 2, y = 430, yend = 445, color = 'black') %>% 
   add_annotation_line(x = 15, xend = 15, y = 430, yend = 445, color = 'black') %>% 
   add_annotation_line(x = 2, xend = 15, y = 445, yend = 445, color = 'black') %>%
   add_annotation_text(x = 9.5, y = 450, "***", fontsize = 12) %>% 
-  adjust_font(fontsize = 12, family = "serif") %>%
-  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Growth_by_Strain_Exp1.tif")
+  adjust_font(fontsize = 12, family = "serif") # %>%
+  #save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Growth_by_Strain_Exp1.tif")
 
 
 growth_data_sum_Wound<- growth_data %>% 
@@ -406,19 +533,19 @@ growth_data_sum_Wound<- growth_data %>%
   mutate( Time = as.integer(Time))
 
 
-growth_data_sum_Wound %>% 
+CroWound <- growth_data_sum_Wound %>% 
   tidyplot(x = Time, y = Growth, color = Wound) %>% 
   add_line(linewidth = 0.8, alpha = 0.75) %>% 
   adjust_colors(c("#012456","#096")) %>% 
   adjust_y_axis(padding = c(0,0), title = "Mean Growth (µg/larvae)", limits = c(0,455)) %>%
   adjust_x_axis(padding = c(0,0), title = "Time (Days)", limits = c(0,15.2)) %>% 
-  adjust_size(width = 200, height = 100) %>% 
+  adjust_size(width = 100, height = 100) %>% 
   add_annotation_line(x = 3, xend = 3, y = 430, yend = 445, color = 'black') %>% 
   add_annotation_line(x = 15, xend = 15, y = 430, yend = 445, color = 'black') %>% 
   add_annotation_line(x = 3, xend = 15, y = 445, yend = 445, color = 'black') %>%
   add_annotation_text(x = 9.5, y = 450, "***", fontsize = 12) %>% 
-  adjust_font(fontsize = 12, family = "serif") %>%
-  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Growth_by_Wound_Exp1.tif")
+  adjust_font(fontsize = 12, family = "serif") #%>%
+ # save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Growth_by_Wound_Exp1.tif")
 
 #Évolution de la moyenne####
 Mean_data_sum_strain <- mean_data %>% 
@@ -502,7 +629,7 @@ Mean_data_sum_Wound %>%
   adjust_colors(c("#012456","#096")) %>% 
   adjust_y_axis(title = "Mean biomass (µg/larvae)") %>%
   adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
-  adjust_size(width = 200, height = 100) %>% 
+  adjust_size(width = 280, height = 100) %>% 
   save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Mean_by_Wound_Exp1.tif")
 
 #Strain comparisons on day 0 vs day 15
@@ -574,7 +701,7 @@ Mean_final <- mean_data_final %>%
   add_mean_bar(alpha = 0.4, dodge_width = 0.9) %>% 
   add_mean_dash(linewidth = 0.8,dodge_width = 0.9) %>% 
   add_sd_errorbar(linewidth = 0.5,dodge_width = 0.9) %>% 
-  adjust_size(width = 200, height = 100) %>% 
+  adjust_size(width = 240, height = 100) %>% 
   adjust_colors(colors_discrete_okabeito) %>% 
   adjust_y_axis(title = "Mean biomass (µg/larvae)") %>%
   adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
@@ -585,7 +712,7 @@ Mean_Final_1<- Mean_final +  ggplot2::geom_text(data = Dataplace, aes(y = Placem
 position = position_dodge(width = 0.9), show.legend = F)
 
 
-save_plot(Mean_Final_1,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Initial_and_Final_Mean_Exp1.tif")
+#save_plot(Mean_Final_1,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Initial_and_Final_Mean_Exp1.tif")
 
 
 #Évolution de la Biomasse####
@@ -636,8 +763,18 @@ biom_data_sum_strain %>%
   add_annotation_line(x = 15, xend = 15, y = 6250, yend = 6350, color = 'black') %>% 
   add_annotation_line(x = 0, xend = 15, y = 6350, yend = 6350, color = 'black') %>%
   add_annotation_text(x = 9.5, y = 6375, "***", fontsize = 12) %>% 
+<<<<<<< HEAD
   adjust_font(fontsize = 12, family = "serif") %>%
   save_plot("C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Biomass_by_Strain_Exp1.tif")
+=======
+<<<<<<< HEAD
+  adjust_font(fontsize = 12, family = "serif") #%>%
+#  save_plot("C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Biomass_by_Strain_Exp1.tif")
+=======
+  adjust_font(fontsize = 12, family = "serif") %>%
+  save_plot("C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Biomass_by_Strain_Exp1.tif")
+>>>>>>> c7f00415a89012c514cf3651aa2e4913bd18dace
+>>>>>>> 90e0dd1 (trying)
 
 
 biom_data_sum_Wound<- biom_data %>% 
@@ -751,7 +888,7 @@ biom_final <- biom_data_final %>%
   add_mean_bar(alpha = 0.4, dodge_width = 0.9) %>% 
   add_mean_dash(linewidth = 0.8,dodge_width = 0.9) %>% 
   add_sd_errorbar(linewidth = 0.5,dodge_width = 0.9) %>% 
-  adjust_size(width = 200, height = 100) %>% 
+  adjust_size(width = 260, height = 100) %>% 
   adjust_colors(colors_discrete_okabeito) %>% 
   adjust_y_axis(title = "Final Biomass (µg)") %>%
   adjust_x_axis(title = "Mealworm Strains", rotate_labels = T) %>%
@@ -762,4 +899,39 @@ biom_Final_1<- biom_final +  ggplot2::geom_text(data = Dataplace, aes(y = Placem
                                                 position = position_dodge(width = 0.9), show.legend = F)
 
 
-save_plot(biom_Final_1,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Final_biom_Exp1.tif")
+#save_plot(biom_Final_1,"C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Final_biom_Exp1.tif")
+
+
+#Graph 3 article
+
+library(cowplot)
+Plot_3_A <- plot_grid(
+  CroSou + theme(plot.margin = margin(t = 10, b = 10)),  # Premier graphique (CroSou)
+  CroWound + theme(plot.margin = margin(t = 10, b = 10)),  # Deuxième graphique (CroWound) 
+  labels = c("(A)", "(B)"),  # Adding labels
+  label_size = 14,           # Set label font size
+  label_fontface = "bold",   # Bold label font
+  label_colour = "black",    # Label color
+  ncol = 2 # Arrange plots in 2 columns
+)
+
+Plot_3_B = plot_grid(
+  Mean_Final_1 + theme(plot.margin = margin(t = 10, b = 10, r = 10)),  # Premier graphique (CroSou)
+  biom_Final_1 + theme(plot.margin = margin(t = 10, b = 10, r = 10)),  # Deuxième graphique (CroWound) 
+  labels = c("(C)", "(D)"),  # Adding labels
+  label_size = 14,           # Set label font size
+  label_fontface = "bold",   # Bold label font
+  label_colour = "black",    # Label color
+  ncol = 1 # Arrange plots in 2 columns
+)
+
+Plot_3_C <- plot_grid(
+  Plot_3_A,
+  Plot_3_B,
+  ncol = 1
+)
+
+  
+  
+tidyplots::save_plot(Plot_3_C, "C:/Users/User/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Mortality_Sterile_Exp1.tif", width = 300, height = 600,
+                     limitsize = F)
