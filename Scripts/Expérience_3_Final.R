@@ -33,7 +33,7 @@ Mort_C <- Mort %>%
   mutate("16" = (Mort$'0' - Mort$'16' )) %>%
   mutate("18" = (Mort$'0' - Mort$'18' )) %>% 
   mutate(group = paste(Mort$Strain, Mort$Wound)) %>% 
-  pivot_longer(cols = (6:14), names_to = 'Time', values_to = 'Mort_Acc') %>%
+  pivot_longer(cols = c(6:14), names_to = 'Time', values_to = 'Mort_Acc') %>%
   mutate(Time = as.numeric(Time)) %>% 
   mutate(Times = as.factor(Time))
 
@@ -44,7 +44,7 @@ Mort_C <- Mort %>%
 
 #Création et manipulation des données de masses et de moyennes -> M = Mass; N = Number
 New.M <- New %>% 
-  select(c(1:6,8:15)) %>% 
+  dplyr::select(c(1:6,8:15)) %>% 
   pivot_longer(cols = c(7:14), names_to = "Day", values_to = "Mass") #format long
 
 New.M$Day <- as.numeric(New.M$Day)
@@ -150,31 +150,30 @@ Mort_C_graph <- Mort_C %>%
   mutate(Wound = case_when(
   Wound == "Ste" ~ "Sterile",
   Wound == "Ser" ~ "Septic",
-  Wound == "Non" ~ "None"
+  Wound == "Non" ~ "Unwounded"
 )) 
 
 
 
 
 
-Mort_C_graph$Wound = factor(Mort_C_graph$Wound, levels = c("Septic", "Sterile", "None"))
+Mort_C_graph$Wound = factor(Mort_C_graph$Wound, levels = c("Septic", "Sterile", "Unwounded"))
 
 
 library(tidyplots)
 
 Mort_C_graph %>% 
   tidyplot(x = Time, y = Mortality, colour = Wound) %>% 
-  add_line(linewidth = 0.8,alpha = 0.8, dodge_width = ) %>% 
-  adjust_colors(c("#012456","#096","gold")) %>% 
+  add_line(linewidth = 1.6,alpha = 0.8) %>% 
+  #adjust_colors(c("#012456","#096","gold")) %>% 
   add_annotation_line(x = 9, xend = 18, y = 16, yend = 16) %>% 
   add_annotation_line(x = 9, xend = 9, y = 15.5, yend = 16) %>% 
   add_annotation_line(x = 18, xend = 18, y = 15.5, yend = 16) %>% 
-  add_annotation_text("***", x = 13.535, y = 16.2, fontsize = 14) %>%
+  add_annotation_text("***", x = 13.535, y = 16.2, fontsize = 24) %>%
   adjust_x_axis(padding = c(0,0), limits = c(0,18.1), title = "Time (Days)") %>% 
   adjust_y_axis(padding = c(0,0), limits = c(0,16.8), title = "Accumulated Mortality (%)") %>% 
-  adjust_size(width = 200, height = 100) %>% 
-  adjust_font(fontsize = 12, family = "serif") %>% 
-  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Mortality_Exp3.tiff")
+  My_Style(Size = "Wide", Color = "Wound", Limits = NULL) %>% 
+  tidyplots::save_plot("C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Mortality_Exp3.tiff")
 
 
 Growth_C_graph <- Growth_M %>% 
@@ -184,23 +183,23 @@ Growth_C_graph <- Growth_M %>%
   mutate(Wound = case_when(
     Wound == "Ste" ~ "Sterile",
     Wound == "Ser" ~ "Septic",
-    Wound == "Non" ~ "Control"
+    Wound == "Non" ~ "Unwounded"
   ))
 
 
 G1 <- Growth_C_graph %>% 
   tidyplot(x = Time, y = Growth, colour = Wound) %>% 
-  add_line(linewidth = 0.8,alpha = 0.8) %>% 
-  adjust_colors(c("#013928","darkred","lightblue")) %>% 
+  add_line(linewidth = 1.2,alpha = 0.8) %>% 
   adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
   adjust_y_axis(padding = c(0,0.01),title = "Accumulated biomass (%)") %>% 
   adjust_size(width = 200, height = 100) %>% 
-  adjust_font(fontsize = 12, family = "serif") 
+  adjust_font(fontsize = 24, family = "serif") %>% 
+  My_Style(Size = "Wide", Color = "Wound", Limits = NULL)
 
 G2 <- G1 + ggplot2::geom_ribbon(data = Growth_C_graph, 
                                 aes(x = Time,ymin = Growth - SD_G, ymax = Growth + SD_G, fill = Wound),
                                 linetype = 0, alpha = 0.2)  
-save_plot(G1,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Growth_Exp3.png")
+tidyplots::save_plot(G1,"C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Growth_Exp3.png")
 save_plot(G2,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Growth2_Exp3.png")
 
 
@@ -223,8 +222,8 @@ Biom_Graph_1 <- Biom_L1 %>%
     Trt == "Lev" ~ "Levucell"
   )) %>% 
   mutate(Strain = case_when(
-    Strain == "Can" ~ "Canada",
-    Strain == "Ita" ~ "Italy",
+    Strain == "Can" ~ "Canada 2",
+    Strain == "Ita" ~ "Italy 2",
     Strain == "Gre" ~ "Greece"
   )) %>% 
   mutate(Time = as.numeric(Time))
@@ -239,7 +238,7 @@ Biom_Graph_2 <- Biom_L1 %>%
   mutate(Wound = case_when(
     Wound == "Ste" ~ "Sterile",
     Wound == "Ser" ~ "Septic",
-    Wound == "Non" ~ "Control"
+    Wound == "Non" ~ "Unwounded"
   )) %>% 
   mutate(Time = as.numeric(Time))
 
@@ -247,32 +246,65 @@ Biom_Graph_2 <- Biom_L1 %>%
 Biom_Graph_2 %>% 
   tidyplot(y = Biomass, x = Time, color = Wound) %>%  
   add_line(linewidth = 0.8,alpha = 0.8) %>% 
-  adjust_colors(c("#013928","darkred","lightblue")) %>% 
+  adjust_colors(c(wound_colors)) %>% 
   adjust_x_axis(padding = c(0,0), title = "Time (Days)") %>% 
   adjust_y_axis(padding = c(0,0.01),title = "Total biomass (%)") %>% 
   adjust_size(width = 200, height = 100) %>% 
-  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_wound_Exp3.png")
+  tidyplots::save_plot("C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Biomass_by_wound_Exp3.png")
 
 
 Bio_Treat <- Biom_Graph_1 %>% 
   tidyplot(y = Biomass, x = Time, color = Strain) %>% 
-  add_line(linewidth = 0.8,alpha = 0.8) %>% 
-  adjust_colors(c("#812","#123765","#876212")) %>% 
+  add_line(linewidth = 1.2,alpha = 0.8) %>% 
+  adjust_colors(c(strain_colors)) %>% 
   adjust_x_axis(title = "Time (Days)") %>% 
-  adjust_y_axis(title = "Total biomass (%)") %>% 
-  split_plot(by = Treatment, widths = 150, heights = 100)
+  adjust_x_axis(title = "Time (Days)", padding = c(0.01,0)) %>% 
+  adjust_y_axis(title = "Total biomass (µg)", padding = c(0,0.05)) %>% 
+  add_annotation_line(x = 7, xend = 7, y = 0, yend = 14000, color = "lightgray") %>% 
+  add_annotation_line(x = 14, xend = 14, y = 0, yend = 14000, color = "lightgray") %>% 
+  add_annotation_text(x = 7, y = 14500, text = "Strain:Treatment:Wound **", fontsize = 14) %>%
+  add_annotation_text(x = 14, y = 14500, text = "Strain:Treatment:Wound *", fontsize = 14) %>% 
+  add_annotation_line(x = 0, xend = 18, y = 13000, yend = 13000) %>% 
+  add_annotation_line(x = 0, xend = 0, y = 12500, yend = 13000) %>% 
+  add_annotation_line(x = 18, xend = 18, y = 12500, yend = 13000) %>% 
+  add_annotation_text("Strain:Treatment ***", x = 9, y = 12500, fontsize = 14) %>%
+  adjust_font(fontsize = 24, family = 'serif') %>% 
+  split_plot(by = Treatment, widths = 300, heights = 200, ncol = 1) +
+  ggplot2::theme(legend.key.size = unit(1.2, "cm"))
     
 Bio_Strain <- Biom_Graph_1 %>% 
   tidyplot(y = Biomass, x = Time, color = Treatment) %>% 
-  add_line(linewidth = 0.8,alpha = 0.8) %>% 
-  adjust_colors(c("#013","#116735","#786512")) %>% 
-  adjust_x_axis(title = "Time (Days)") %>% 
-  adjust_y_axis(title = "Total biomass (%)") %>% 
-  split_plot(by = Strain, widths = 150, heights = 100)
+  add_line(linewidth = 1.2,alpha = 0.8) %>% 
+  adjust_colors(c(treatment_colors)) %>% 
+  adjust_x_axis(title = "Time (Days)", padding = c(0.01,0)) %>% 
+  adjust_y_axis(title = "Total biomass (µg)", padding = c(0,0.05)) %>% 
+  adjust_font(fontsize = 24, family = "serif") %>% 
+  add_annotation_line(x = 7, xend = 7, y = 0, yend = 14000, color = "lightgray") %>% 
+  add_annotation_line(x = 14, xend = 14, y = 0, yend = 14000, color = "lightgray") %>% 
+  add_annotation_text(x = 7, y = 14500, text = "Strain:Treatment:Wound **", fontsize = 14) %>%
+  add_annotation_text(x = 14, y = 14500, text = "Strain:Treatment:Wound *", fontsize = 14) %>% 
+  add_annotation_line(x = 0, xend = 18, y = 13000, yend = 13000) %>% 
+  add_annotation_line(x = 0, xend = 0, y = 12500, yend = 13000) %>% 
+  add_annotation_line(x = 18, xend = 18, y = 12500, yend = 13000) %>% 
+  add_annotation_text("Strain:Treatment ***", x = 9, y = 12500, fontsize = 14) %>%
+  adjust_font(fontsize = 24, family = 'serif') %>% 
+  split_plot(by = Strain, widths = 300, heights = 200, ncol = 1) +
+  ggplot2::theme(legend.key.size = unit(1.2, "cm"))
 
-save_plot(Bio_Treat,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/BiomTreat_Exp3.png")
-save_plot(Bio_Strain,"C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/BiomStrain_Exp3.png")
+Plot_7 <- plot_grid(
+  Bio_Treat + theme(plot.margin = margin(l = 5, b = 5)),  # Premier graphique (CroSou)
+  Bio_Strain + theme(plot.margin = margin(l = 5, b = 5)),  # Deuxième graphique (CroWound) 
+  labels = c("(A)", "(B)"),  # Adding labels
+  label_size = 30,           # Set label font size
+  label_fontface = "bold",   # Bold label font
+  label_colour = "black",    # Label color
+  ncol = 2,
+  rel_widths = c(1, 1)# Arrange plots in 2 columns
+)
 
+tidyplots::save_plot(Bio_Treat,"C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/BiomTreat_Exp3.png")
+tidyplots::save_plot(Bio_Strain,"C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/BiomStrain_Exp3.png")
+tidyplots::save_plot(Plot_7,"C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/BiomStrainTreat_Exp3.tif", height = 700, width = 850)
 
 #Biomass Jour7 et 14 PU BON !!!####
 Jour_7_Graph_CanGre <- Jour_7 %>% 
@@ -393,7 +425,7 @@ Jour_7_Graph_Ita %>%
                       x = c(0.727, 1, 1.277,1.727,2,2.277,2.727, 3, 3.277), fontsize = 12) %>% 
   adjust_size(width = 150, height = 150) %>% 
   adjust_font(fontsize = 12, family = "serif") %>% 
-  save_plot("C:/Users/gsain/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Biomass_by_Ita_Wound7_Exp3.tif")
+  save_plot("C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Biomass_by_Ita_Wound7_Exp3.tif")
   
 #Jour14
 
@@ -1073,8 +1105,18 @@ Jour_0 <- New.F %>%
     Trt == "Con" ~ "Wheatbran",
   )) %>% 
   mutate(Strain = case_when(
+<<<<<<< HEAD
     Strain == "Can" ~ "Canada",
     Strain == "Ita" ~ "Italy",
+=======
+<<<<<<< HEAD
+    Strain == "Can" ~ "Canada 2",
+    Strain == "Ita" ~ "Italy 2",
+=======
+    Strain == "Can" ~ "Canada",
+    Strain == "Ita" ~ "Italy",
+>>>>>>> c7f00415a89012c514cf3651aa2e4913bd18dace
+>>>>>>> 90e0dd1 (trying)
     Strain == "Gre" ~ "Greece"
   )) 
 
@@ -1097,11 +1139,34 @@ Dataplace <- StatsJ0 %>%
 
 Jour_0S <- Jour_0 %>% 
   tidyplot(x = Treatment, y = Jour0, color = Strain) %>% 
+<<<<<<< HEAD
   add_mean_bar(alpha = 0.4) %>%
+=======
+<<<<<<< HEAD
+  add_mean_bar(alpha = 0.7) %>%
+=======
+  add_mean_bar(alpha = 0.4) %>%
+>>>>>>> c7f00415a89012c514cf3651aa2e4913bd18dace
+>>>>>>> 90e0dd1 (trying)
   add_mean_dash() %>% 
   add_sd_errorbar() %>% 
   adjust_y_axis(title = 'Mean Biomass (µg/larvae)') %>%
   adjust_x_axis(title = 'Feed Treatments') %>% 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+  adjust_colors(c(strain_colors)) %>%
+  adjust_size(width = 400, height = 200) %>% 
+  adjust_font(fontsize = 24, family = "serif")  +
+  ggplot2::theme(legend.key.size = unit(1.2, "cm"))
+
+
+C1 <- Jour_0S +  ggplot2::geom_text(data = Dataplace, aes(y = Placement, label = labelS),
+                                    position = position_dodge(width = 0.8), show.legend = F, size = 6)
+
+tidyplots::save_plot(C1, "C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Jour0S.tif")
+=======
+>>>>>>> 90e0dd1 (trying)
   adjust_colors(c("#812","#123765","#876212")) %>%
   adjust_size(width = 200, height = 100) %>% 
   adjust_font(fontsize = 12, family = "serif")
@@ -1111,6 +1176,10 @@ C1 <- Jour_0S +  ggplot2::geom_text(data = Dataplace, aes(y = Placement, label =
                                     position = position_dodge(width = 0.8), show.legend = F)
 
 save_plot(C1, "C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Jour0S.tif")
+<<<<<<< HEAD
+=======
+>>>>>>> c7f00415a89012c514cf3651aa2e4913bd18dace
+>>>>>>> 90e0dd1 (trying)
 
 
 
@@ -1131,6 +1200,39 @@ Dataplace <- StatsCro10 %>%
 
 Jour_0T <- Jour_0 %>% 
   tidyplot(x = Strain, y = Jour0, color = Treatment) %>% 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+  add_mean_bar(alpha = 0.7) %>%
+  add_mean_dash() %>% 
+  add_sd_errorbar() %>% 
+  adjust_y_axis(title = 'Mean Biomass (µg/larvae)') %>%
+  adjust_x_axis(title = 'Mealworm Strains') %>% 
+  adjust_colors(c(treatment_colors)) %>%
+  adjust_size(width = 400, height = 200) %>%
+  adjust_font(fontsize = 24, family = "serif")  +
+  ggplot2::theme(legend.key.size = unit(1.2, "cm"))
+
+C2 <- Jour_0T +  ggplot2::geom_text(data = Dataplace, aes(y = Placement, label = labelT),
+                                    position = position_dodge(width = 0.8), show.legend = F, size = 6)
+
+tidyplots::save_plot(C2, "C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Jour0T.tif")
+
+PLot_6 = plot_grid(
+  C1 + theme(plot.margin = margin(t = 20, b = 10, r = 10)),  # Premier graphique (CroSou)
+  C2 + theme(plot.margin = margin(t = 20, b = 10, r = 10)),  # Deuxième graphique (CroWound) 
+  labels = c("(A)", "(B)"),  # Adding labels
+  label_size = 30,           # Set label font size
+  label_fontface = "bold",   # Bold label font
+  label_colour = "black",    # Label color
+  ncol = 1,
+  rel_heights = c(1,1),
+  align = "left"# Arrange plots in 2 columns
+)
+
+tidyplots::save_plot(PLot_6, "C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Figures finales/Figure_6.tif", width = 550, height = 500)
+=======
+>>>>>>> 90e0dd1 (trying)
   add_mean_bar(alpha = 0.4) %>%
   add_mean_dash() %>% 
   add_sd_errorbar() %>% 
@@ -1144,6 +1246,10 @@ C2 <- Jour_0T +  ggplot2::geom_text(data = Dataplace, aes(y = Placement, label =
                                     position = position_dodge(width = 0.8), show.legend = F)
 
 save_plot(C2, "C:/Users/user/OneDrive/Documents/Entomopathologie_workshop/Figures/Tiff/Jour0T.tif")
+<<<<<<< HEAD
+=======
+>>>>>>> c7f00415a89012c514cf3651aa2e4913bd18dace
+>>>>>>> 90e0dd1 (trying)
 #####PotentialGraphs#####
 Max_Biom %>% 
   tidyplot(x = Strain, y = MaxBiom, colour = Trt) %>% 
